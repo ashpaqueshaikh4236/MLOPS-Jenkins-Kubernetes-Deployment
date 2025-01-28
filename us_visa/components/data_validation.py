@@ -79,7 +79,7 @@ class DataValidation:
 
             write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
 
-            data_drift_dashboard.save(self.data_validation_config.drift_dashboard_file_path)
+            #data_drift_dashboard.save(self.data_validation_config.drift_dashboard_file_path)
             logging.info("Data Distribution Dashboard save Successfully")
 
 
