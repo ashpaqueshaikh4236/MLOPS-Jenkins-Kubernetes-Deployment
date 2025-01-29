@@ -16,7 +16,6 @@ class EvaluateModelResponse:
     trained_model_f1_score: float
     best_model_f1_score: float
     is_model_accepted: bool
-    difference: float
 
 
 class ModelEvaluation:
@@ -53,16 +52,24 @@ class ModelEvaluation:
             trained_model_f1_score = self.model_trainer_artifact.metric_artifact.f1_score
 
             best_model_f1_score=None
+            
             best_model = self.get_best_model()
+
             if best_model is not None:
                 y_hat_best_model = best_model.predict(x)
                 best_model_f1_score = f1_score(y, y_hat_best_model)
             
-            tmp_best_model_score = 0 if best_model_f1_score is None else best_model_f1_score
+            if best_model_f1_score is None:
+                tmp_best_model_score = 0
+            else:
+                tmp_best_model_score = best_model_f1_score
+
+
+            is_model_accepted = trained_model_f1_score > tmp_best_model_score
+
             result = EvaluateModelResponse(trained_model_f1_score=trained_model_f1_score,
                                            best_model_f1_score=best_model_f1_score,
-                                           is_model_accepted=trained_model_f1_score > tmp_best_model_score,
-                                           difference=trained_model_f1_score - tmp_best_model_score)
+                                           is_model_accepted=is_model_accepted)
             logging.info(f"Result: {result}")
             return result
 
@@ -77,8 +84,7 @@ class ModelEvaluation:
             model_evaluation_artifact = ModelEvaluationArtifact(
                 is_model_accepted=evaluate_model_response.is_model_accepted,
                 s3_model_path=s3_model_path,
-                trained_model_path=self.model_trainer_artifact.trained_model_file_path,
-                changed_accuracy=evaluate_model_response.difference)
+                trained_model_path=self.model_trainer_artifact.trained_model_file_path)
 
             logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
             return model_evaluation_artifact
