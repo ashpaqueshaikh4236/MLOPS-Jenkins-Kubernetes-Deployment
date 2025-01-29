@@ -47,10 +47,10 @@ class TrainPipeline:
 
         try:
             data_validation = DataValidation(data_ingestion_artifact=data_ingestion_artifact,data_validation_config=self.data_validation_config)
-            data_validation_artifact = data_validation.initiate_data_validation()
+            data_validation_artifact, drift_status = data_validation.initiate_data_validation()
             logging.info("Performed the data validation operation")
             logging.info("Exited the start_data_validation method of TrainPipeline class")
-            return data_validation_artifact
+            return data_validation_artifact, drift_status
 
         except Exception as e:
             raise USvisaException(e, sys) from e
@@ -85,8 +85,11 @@ class TrainPipeline:
     def run_pipeline(self, ) -> None:
         try:
             data_ingestion_artifact = self.start_data_ingestion()
-            data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-            data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
-            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+            data_validation_artifact,drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+            if drift_status == True:
+                data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+                model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+            else:
+                logging.info("Validation complete: No drift found all pipeline skipped ")
         except Exception as e:
             raise USvisaException(e, sys)

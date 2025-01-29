@@ -127,7 +127,7 @@ class DataValidation:
                     logging.info(f"Drift detected.")
                     validation_error_msg = "Drift detected"
                 else:
-                    validation_error_msg = "Drift not detected"
+                    validation_error_msg = "Drift not detected"  
             else:
                 logging.info(f"Validation_error: {validation_error_msg}")
                 
@@ -135,6 +135,6 @@ class DataValidation:
             data_validation_artifact = DataValidationArtifact(validation_status=validation_status,message=validation_error_msg,drift_report_file_path=self.data_validation_config.drift_report_file_path)
 
             logging.info(f"Data validation artifact: {data_validation_artifact}")
-            return data_validation_artifact
+            return data_validation_artifact, drift_status
         except Exception as e:
             raise USvisaException(e, sys) from e

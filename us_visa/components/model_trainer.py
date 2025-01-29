@@ -3,8 +3,6 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-from pandas import DataFrame
-from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from neuro_mf  import ModelFactory
 
@@ -24,6 +22,7 @@ class ModelTrainer:
     def get_model_object_and_report(self, train: np.array, test: np.array) -> Tuple[object, object]:
         try:
             logging.info("Using neuro_mf to get best model object and report")
+            
             model_factory = ModelFactory(model_config_path=self.model_trainer_config.model_config_file_path)
             
             x_train, y_train, x_test, y_test = train[:, :-1], train[:, -1], test[:, :-1], test[:, -1]
