@@ -5,17 +5,23 @@ from us_visa.components.data_ingestion import DataIngestion
 from us_visa.components.data_validation import DataValidation
 from us_visa.components.data_transformation import DataTransformation
 from us_visa.components.model_trainer import ModelTrainer
+from us_visa.components.model_evaluation import ModelEvaluation
+from us_visa.components.model_pusher import ModelPusher
 
 
 from us_visa.entity.config_entity import (DataIngestionConfig,
                                           DataValidationConfig,
                                           DataTransformationConfig,
-                                          ModelTrainerConfig)
+                                          ModelTrainerConfig,
+                                          ModelEvaluationConfig,
+                                          ModelPusherConfig)
 
 from us_visa.entity.artifact_entity import (DataIngestionArtifact,
                                             DataValidationArtifact,
                                             DataTransformationArtifact,
-                                            ModelTrainerArtifact)
+                                            ModelTrainerArtifact,
+                                            ModelEvaluationArtifact,
+                                            ModelPusherArtifact)
 
 
 
@@ -25,6 +31,8 @@ class TrainPipeline:
         self.data_validation_config = DataValidationConfig()
         self.data_transformation_config = DataTransformationConfig()
         self.model_trainer_config = ModelTrainerConfig()
+        self.model_evaluation_config = ModelEvaluationConfig()
+        self.model_pusher_config = ModelPusherConfig()
 
 
     def start_data_ingestion(self) -> DataIngestionArtifact:
@@ -76,20 +84,99 @@ class TrainPipeline:
 
         except Exception as e:
             raise USvisaException(e, sys)
+        
+
+    def start_model_evaluation(self, data_ingestion_artifact: DataIngestionArtifact, model_trainer_artifact: ModelTrainerArtifact) -> ModelEvaluationArtifact:
+        try:
+            model_evaluation = ModelEvaluation(model_eval_config=self.model_evaluation_config, data_ingestion_artifact=data_ingestion_artifact,model_trainer_artifact=model_trainer_artifact)
+            model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
+            return model_evaluation_artifact
+        except Exception as e:
+            raise USvisaException(e, sys)
+        
+
+
+    def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact) -> ModelPusherArtifact:
+        try:
+            model_pusher = ModelPusher(model_evaluation_artifact=model_evaluation_artifact,model_pusher_config=self.model_pusher_config)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except Exception as e:
+            raise USvisaException(e, sys)
     
 
 
 
 
 
-    def run_pipeline(self, ) -> None:
+    # def run_pipeline(self, ) -> None:
+    #     try:
+    #         data_ingestion_artifact = self.start_data_ingestion()
+    #         data_validation_artifact,drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+    #         if drift_status == False:
+    #             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+    #             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+    #             model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,model_trainer_artifact=model_trainer_artifact)
+    #         else:
+    #             logging.info("Validation complete: No drift found all pipeline skipped ")
+    #     except Exception as e:
+    #         raise USvisaException(e, sys)
+        
+
+
+    
+    # def run_pipeline(self, ) -> None:
+    #     try:
+    #         data_ingestion_artifact = self.start_data_ingestion()
+    #         data_validation_artifact,drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+
+    #         if drift_status == False:
+    #             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+    #             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+    #             model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,model_trainer_artifact=model_trainer_artifact)
+
+    #             if not model_evaluation_artifact.is_model_accepted:
+    #                 logging.info(f"Model not accepted.")
+    #             else:
+    #                 model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
+    #         else:
+    #             logging.info("Validation complete: No drift found all pipeline skipped ")
+
+    #         return None
+    #     except Exception as e:
+    #         raise USvisaException(e, sys)
+
+
+
+    def run_pipeline(self) -> None:
         try:
+            # Start data ingestion process
             data_ingestion_artifact = self.start_data_ingestion()
-            data_validation_artifact,drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-            if drift_status == True:
+
+            # Start data validation process and check for drift
+            data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+
+            # If  drift is detected, proceed with the pipeline
+            if drift_status == False:
                 data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+                
                 model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+                model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
+
+                # If model is not accepted, log the event
+                if not model_evaluation_artifact.is_model_accepted:
+                    logging.info("Model not accepted. Skipping model pusher.")
+                else:
+                    # If model is accepted, push the model
+                    model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
             else:
-                logging.info("Validation complete: No drift found all pipeline skipped ")
+                # Log when no drift is detected and skip further pipeline stages
+                logging.info("Validation complete: No drift found, all pipeline steps skipped.")
+
         except Exception as e:
-            raise USvisaException(e, sys)
+            # Log the exception with relevant error details
+            logging.error(f"An error occurred during pipeline execution: {str(e)}")
+            # Optionally, re-raise the exception or return an error code/artifact
+            raise e
+
+        
