@@ -9,7 +9,6 @@ import pandas as pd
 from typing import Optional
 from us_visa.entity.s3_estimator import USvisaEstimator
 from dataclasses import dataclass
-from us_visa.entity.estimator import USvisaModel
 from us_visa.entity.estimator import TargetValueMapping
 
 @dataclass

@@ -67,8 +67,7 @@ class DataIngestion:
             logging.info("Got the data from mongodb")
             self.split_data_as_train_test(dataframe)
             logging.info("Performed train test split on the dataset")
-            logging.info(
-                "Exited initiate_data_ingestion method of Data_Ingestion class")
+            logging.info("Exited initiate_data_ingestion method of Data_Ingestion class")
 
             data_ingestion_artifact = DataIngestionArtifact(trained_file_path=self.data_ingestion_config.training_file_path,test_file_path=self.data_ingestion_config.testing_file_path)
             
