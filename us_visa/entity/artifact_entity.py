@@ -23,7 +23,7 @@ class DataTransformationArtifact:
 
 
 @dataclass
-class ClassificationMetricArtifact:
+class ClassificationMetricArtifactTestData:
     accuracy:float
     f1_score:float
     precision_score:float
@@ -34,11 +34,11 @@ class ClassificationMetricArtifact:
 @dataclass
 class ModelTrainerArtifact:
     trained_model_file_path:str 
-    metric_artifact:ClassificationMetricArtifact
+    test_data_metric_artifact:ClassificationMetricArtifactTestData
 
 
 @dataclass
-class ModelEvaluationArtifact:
+class ModelValidateArtifact:
     is_model_accepted:bool
     s3_model_path:str 
     trained_model_path:str

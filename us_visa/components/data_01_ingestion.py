@@ -48,11 +48,14 @@ class DataIngestion:
             dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
             os.makedirs(dir_path,exist_ok=True)
             
-            logging.info(f"Exporting train and test file path.")
+            logging.info(f"Exporting train and test file path and shape.")
             train_set.to_csv(self.data_ingestion_config.training_file_path,index=False,header=True)
             test_set.to_csv(self.data_ingestion_config.testing_file_path,index=False,header=True)
+            
+            logging.info(f"Shape of train_set {train_set.shape}")
+            logging.info(f"Shape of test_set {test_set.shape}")
 
-            logging.info(f"Exported train and test file path.")
+            logging.info(f"Exported train and test file path and shape.")
         except Exception as e:
             raise USvisaException(e, sys) from e
         

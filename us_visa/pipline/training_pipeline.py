@@ -1,27 +1,17 @@
 import sys
 from us_visa.exception import USvisaException
 from us_visa.logger import logging
-from us_visa.components.data_ingestion import DataIngestion
-from us_visa.components.data_validation import DataValidation
-from us_visa.components.data_transformation import DataTransformation
-from us_visa.components.model_trainer import ModelTrainer
-from us_visa.components.model_evaluation import ModelEvaluation
-from us_visa.components.model_pusher import ModelPusher
+from us_visa.components.data_01_ingestion import DataIngestion
+from us_visa.components.data_02_validation import DataValidation
+from us_visa.components.data_03_transformation import DataTransformation
+from us_visa.components.model_04_trainer import ModelTrainer
+from us_visa.components.model_05_validate import ModelValidate
+from us_visa.components.model_06_pusher import ModelPusher
 
 
-from us_visa.entity.config_entity import (DataIngestionConfig,
-                                          DataValidationConfig,
-                                          DataTransformationConfig,
-                                          ModelTrainerConfig,
-                                          ModelEvaluationConfig,
-                                          ModelPusherConfig)
+from us_visa.entity.config_entity import (DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelValidateConfig,ModelPusherConfig)
 
-from us_visa.entity.artifact_entity import (DataIngestionArtifact,
-                                            DataValidationArtifact,
-                                            DataTransformationArtifact,
-                                            ModelTrainerArtifact,
-                                            ModelEvaluationArtifact,
-                                            ModelPusherArtifact)
+from us_visa.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,ModelTrainerArtifact,ModelValidateArtifact,ModelPusherArtifact)
 
 
 
@@ -31,7 +21,7 @@ class TrainPipeline:
         self.data_validation_config = DataValidationConfig()
         self.data_transformation_config = DataTransformationConfig()
         self.model_trainer_config = ModelTrainerConfig()
-        self.model_evaluation_config = ModelEvaluationConfig()
+        self.model_validate_config = ModelValidateConfig()
         self.model_pusher_config = ModelPusherConfig()
 
 
@@ -91,23 +81,23 @@ class TrainPipeline:
             raise USvisaException(e, sys)
         
 
-    def start_model_evaluation(self, data_ingestion_artifact: DataIngestionArtifact, model_trainer_artifact: ModelTrainerArtifact) -> ModelEvaluationArtifact:
-        logging.info("<----------Entered the start_model_evaluation method of TrainPipeline class---------->")
+    def start_model_validate(self, data_ingestion_artifact: DataIngestionArtifact, model_trainer_artifact: ModelTrainerArtifact) -> ModelValidateArtifact:
+        logging.info("<----------Entered the start_model_validate method of TrainPipeline class---------->")
         try:
-            model_evaluation = ModelEvaluation(model_eval_config=self.model_evaluation_config, data_ingestion_artifact=data_ingestion_artifact,model_trainer_artifact=model_trainer_artifact)
-            model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
-            logging.info("----->Exited the start_model_evaluation method of TrainPipeline class<-----")
-            return model_evaluation_artifact
+            model_validate = ModelValidate(model_val_config=self.model_validate_config, data_ingestion_artifact=data_ingestion_artifact,model_trainer_artifact=model_trainer_artifact)
+            model_validate_artifact = model_validate.initiate_model_Validate()
+            logging.info("----->Exited the start_model_validate method of TrainPipeline class<-----")
+            return model_validate_artifact
         
         except Exception as e:
             raise USvisaException(e, sys)
         
 
 
-    def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact) -> ModelPusherArtifact:
+    def start_model_pusher(self, model_validate_artifact: ModelValidateArtifact) -> ModelPusherArtifact:
         logging.info("<----------Entered the start_model_pusher method of TrainPipeline class---------->")
         try:
-            model_pusher = ModelPusher(model_evaluation_artifact=model_evaluation_artifact,model_pusher_config=self.model_pusher_config)
+            model_pusher = ModelPusher(model_validate_artifact=model_validate_artifact,model_pusher_config=self.model_pusher_config)
             model_pusher_artifact = model_pusher.initiate_model_pusher()
             logging.info("----->Exited the start_model_pusher method of TrainPipeline class<-----")
             return model_pusher_artifact
@@ -121,15 +111,20 @@ class TrainPipeline:
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
 
-            if drift_status == False:
+            if drift_status == True:
                 data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
                 model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-                model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
 
-                if not model_evaluation_artifact.is_model_accepted:
-                    logging.info("Model not accepted. Skipping model pusher...............")
+                if model_trainer_artifact.test_data_metric_artifact.f1_score > self.model_trainer_config.expected_f1_score_test_data:
+                    model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
+
+                    if not model_validate_artifact.is_model_accepted:
+                        logging.info("Model not accepted. Skipping model pusher...............")
+                    else:
+                        model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
+
                 else:
-                    model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
+                    logging.info("Alredy best f1_score model are in the cloud")
             else:
                 logging.info("Validation complete: No drift found, all pipeline steps skipped...............")
 

@@ -67,8 +67,7 @@ class DataTransformation:
 
             logging.info("Created preprocessor object from ColumnTransformer")
 
-            logging.info(
-                "Exited get_data_transformer_object method of DataTransformation class")
+            logging.info("Exited get_data_transformer_object method of DataTransformation class")
             return preprocessor
 
         except Exception as e:

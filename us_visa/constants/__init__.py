@@ -65,13 +65,14 @@ MODEL TRAINER related constant start with MODEL_TRAINER var name
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
-MODEL_TRAINER_EXPECTED_SCORE: float = 0.9
+MODEL_TRAINER_EXPECTED_ACCURACY_SCORE_TRAIN_DATA: float = 0.9
+MODEL_TRAINER_TRAINED_F1_SCORE_TEST_DATA: float = 0.9
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 
 
 
 """
-MODEL EVALUATION related constant 
+MODEL VALIDATE related constant 
 """
 MODEL_BUCKET_NAME = "usvisa.model-2025"
 MODEL_PUSHER_S3_KEY = "model-registry"

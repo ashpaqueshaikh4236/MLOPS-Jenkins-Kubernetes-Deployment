@@ -47,12 +47,13 @@ class DataTransformationConfig:
 class ModelTrainerConfig:
     model_trainer_dir: str = os.path.join(training_pipeline_config.artifact_dir, MODEL_TRAINER_DIR_NAME)
     trained_model_file_path: str = os.path.join(model_trainer_dir, MODEL_TRAINER_TRAINED_MODEL_DIR, MODEL_FILE_NAME)
-    expected_accuracy: float = MODEL_TRAINER_EXPECTED_SCORE
+    expected_accuracy_score_train_data: float = MODEL_TRAINER_EXPECTED_ACCURACY_SCORE_TRAIN_DATA
     model_config_file_path: str = MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
+    expected_f1_score_test_data = MODEL_TRAINER_TRAINED_F1_SCORE_TEST_DATA
 
 
 @dataclass
-class ModelEvaluationConfig:
+class ModelValidateConfig:
     bucket_name: str = MODEL_BUCKET_NAME
     s3_model_key_path: str = MODEL_FILE_NAME
 

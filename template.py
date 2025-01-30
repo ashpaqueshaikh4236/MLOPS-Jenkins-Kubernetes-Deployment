@@ -11,12 +11,12 @@ list_of_files = [
     f"{project_name}/cloud_storage/aws_storage.py",
 
     f"{project_name}/components/__init__.py",
-    f"{project_name}/components/data_ingestion.py",  
-    f"{project_name}/components/data_validation.py",
-    f"{project_name}/components/data_transformation.py",
-    f"{project_name}/components/model_trainer.py",
-    f"{project_name}/components/model_evaluation.py",
-    f"{project_name}/components/model_pusher.py",
+    f"{project_name}/components/data_01_ingestion.py",  
+    f"{project_name}/components/data_02_validation.py",
+    f"{project_name}/components/data_03_transformation.py",
+    f"{project_name}/components/model_04_trainer.py",
+    f"{project_name}/components/model_05_validate.py",
+    f"{project_name}/components/model_06_pusher.py",
 
     f"{project_name}/configuration/__init__.py",
     f"{project_name}/configuration/aws_connection.py"
