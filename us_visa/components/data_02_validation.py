@@ -67,6 +67,8 @@ class DataValidation:
 
     def detect_dataset_drift(self, reference_df: DataFrame, current_df: DataFrame, ) -> bool:
         try:
+            logging.info("Data Drift Checking Start")
+            logging.info("Wait................")
             data_drift_profile = Profile(sections=[DataDriftProfileSection()])
             data_drift_dashboard = Dashboard(tabs=[DataDriftTab()])
 
@@ -77,10 +79,11 @@ class DataValidation:
             report = data_drift_profile.json()
             json_report = json.loads(report)
 
+            
             write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
 
             data_drift_dashboard.save(self.data_validation_config.drift_dashboard_file_path)
-            logging.info("Data Distribution Dashboard save Successfully")
+            logging.info("Data Drift Dashboard save Successfully")
 
 
             n_features = json_report["data_drift"]["data"]["metrics"]["n_features"]
@@ -89,6 +92,8 @@ class DataValidation:
 
             logging.info(f"{n_drifted_features}/{n_features} drift detected.")
             drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
+
+            logging.info("Data Drift Checking End")
             return drift_status
         except Exception as e:
             raise USvisaException(e, sys) from e

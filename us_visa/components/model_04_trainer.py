@@ -29,9 +29,8 @@ class ModelTrainer:
 
     def get_model_object_and_report(self, train: np.array, test: np.array) -> Tuple[object, object]:
         try:
-            logging.info("Using neuro_mf to get best model object and report")
-
-            logging.info("Add metrics in mlfow")
+            logging.info("Model Hyperparametertuning and track metrics in mlflow Start")
+            logging.info("Wait................")
 
             mlflow.set_registry_uri("DAGSHUB_URL")
             tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
@@ -40,13 +39,19 @@ class ModelTrainer:
             
                 model_factory = ModelFactory(model_config_path=self.model_trainer_config.model_config_file_path)
                 
-                
                 x_train, y_train, x_test, y_test = train[:, :-1], train[:, -1], test[:, :-1], test[:, -1]
 
-                best_model_detail = model_factory.get_best_model(X=x_train,y=y_train,base_accuracy=self.model_trainer_config.expected_accuracy_score_train_data)
-                model_obj = best_model_detail.best_model
-                
-                y_pred = model_obj.predict(x_test)
+                best_model_detail = model_factory.get_best_model(X=x_train,y=y_train,base_accuracy=self.model_trainer_config.expected_f1_score_train_data)
+                model = best_model_detail.best_model
+                model_name = best_model_detail.model
+                params = best_model_detail.best_parameters
+                model_score = best_model_detail.best_score
+
+                logging.info(f"Expected_f1_score_train_data is {self.model_trainer_config.expected_f1_score_train_data}")
+                logging.info(f"Model_f1_score_train_data is {model_score}")
+
+    
+                y_pred = model.predict(x_test)
 
                 (accuracy, f1, precision, recall) = self.eval_metrics(y_test, y_pred)
             
@@ -54,14 +59,17 @@ class ModelTrainer:
                 mlflow.log_metric('f1', f1)
                 mlflow.log_metric('precision', precision)
                 mlflow.log_metric('recall', recall)
+                mlflow.log_param("model_name", model_name)
+                mlflow.log_param("best_params", params)
 
                 if tracking_url_type_store != "file":
 
-                    mlflow.sklearn.log_model(model_obj, "model", registered_model_name="best_model")
+                    mlflow.sklearn.log_model(model, "model")
                 else:
-                    mlflow.sklearn.log_model(model_obj, "model")
+                    mlflow.sklearn.log_model(model, "model")
+                
 
-                logging.info("End metrics in mlfow")
+                logging.info("Model Hyperparametertuning and track metrics in mlflow End")
 
                 test_data_metric_artifact = ClassificationMetricArtifactTestData(accuracy=accuracy, f1_score=f1, precision_score=precision, recall_score=recall)
             
@@ -82,7 +90,7 @@ class ModelTrainer:
             preprocessing_obj = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
 
 
-            if best_model_detail.best_score < self.model_trainer_config.expected_accuracy_score_train_data:
+            if best_model_detail.best_score < self.model_trainer_config.expected_f1_score_train_data:
                 logging.info("No best model found with score more than base score")
                 raise Exception("No best model found with score more than base score")
 

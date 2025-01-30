@@ -27,11 +27,7 @@ class USvisaEstimator:
 
     def save_model(self,from_file,remove:bool=False)->None:
         try:
-            self.s3.upload_file(from_file,
-                                to_filename=self.model_path,
-                                bucket_name=self.bucket_name,
-                                remove=remove
-                                )
+            self.s3.upload_file(from_file,to_filename=self.model_path,bucket_name=self.bucket_name,remove=remove)
         except Exception as e:
             raise USvisaException(e, sys)
 

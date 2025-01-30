@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from us_visa.entity.estimator import TargetValueMapping
 
 @dataclass
-class EvaluateModelResponse:
+class ValidateModelResponse:
     trained_model_test_data_f1_score: float
     best_model_f1_score: float
     is_model_accepted: bool
@@ -40,7 +40,7 @@ class ModelValidate:
         except Exception as e:
             raise  USvisaException(e,sys)
 
-    def validate_model(self) -> EvaluateModelResponse:
+    def validate_model(self) -> ValidateModelResponse:
         try:
             test_df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
             test_df['company_age'] = CURRENT_YEAR-test_df['yr_of_estab']
@@ -67,7 +67,10 @@ class ModelValidate:
 
             is_model_accepted = trained_model_test_data_f1_score > tmp_best_model_score
 
-            result = EvaluateModelResponse(trained_model_test_data_f1_score=trained_model_test_data_f1_score, best_model_f1_score=best_model_f1_score,is_model_accepted=is_model_accepted)
+            logging.info(f"trained_model_test_data_f1_score {trained_model_test_data_f1_score}")
+            logging.info(f"s3_model_test_data_f1_score {tmp_best_model_score}")
+
+            result = ValidateModelResponse(trained_model_test_data_f1_score=trained_model_test_data_f1_score, best_model_f1_score=best_model_f1_score,is_model_accepted=is_model_accepted)
             logging.info(f"Result: {result}")
             return result
 

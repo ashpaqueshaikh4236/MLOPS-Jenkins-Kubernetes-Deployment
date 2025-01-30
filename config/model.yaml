@@ -2,8 +2,9 @@ grid_search:
   class: GridSearchCV
   module: sklearn.model_selection
   params:
-    cv: 3
-    verbose: 3
+    cv: 5
+    verbose: 5
+    scoring: f1 
 model_selection:
   module_0:
     class: KNeighborsClassifier

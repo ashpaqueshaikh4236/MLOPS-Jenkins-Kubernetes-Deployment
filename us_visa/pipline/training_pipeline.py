@@ -111,7 +111,7 @@ class TrainPipeline:
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
 
-            if drift_status == False:
+            if drift_status == True:
                 data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
                 model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
 
@@ -124,7 +124,9 @@ class TrainPipeline:
                         model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
 
                 else:
-                    logging.info("Alredy best f1_score model are in the cloud")
+                    logging.info(f"Expected_f1_score_test_data is {self.model_trainer_config.expected_f1_score_test_data}")
+                    logging.info(f"Model_f1_score_test_data is {model_trainer_artifact.test_data_metric_artifact.f1_score}")
+                    logging.info("Alredy best f1_score model is in cloud pipepline skip..........")
             else:
                 logging.info("Validation complete: No drift found, all pipeline steps skipped...............")
 
