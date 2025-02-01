@@ -27,7 +27,7 @@ class ModelTrainer:
             recall = recall_score(y_test, y_pred)
             return accuracy, f1, precision, recall
 
-    def get_model_object_and_report(self, train: np.array, test: np.array) -> Tuple[object, object]:
+    def get_model_object(self, train: np.array, test: np.array) -> Tuple[object, object]:
         try:
             logging.info("Model Hyperparametertuning and track metrics in mlflow Start")
             logging.info("Wait................")
@@ -85,7 +85,7 @@ class ModelTrainer:
             train_arr = load_numpy_array_data(file_path=self.data_transformation_artifact.transformed_train_file_path)
             test_arr = load_numpy_array_data(file_path=self.data_transformation_artifact.transformed_test_file_path)
             
-            best_model_detail ,test_data_metric_artifact = self.get_model_object_and_report(train=train_arr, test=test_arr)
+            best_model_detail ,test_data_metric_artifact = self.get_model_object(train=train_arr, test=test_arr)
             
             preprocessing_obj = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
 
