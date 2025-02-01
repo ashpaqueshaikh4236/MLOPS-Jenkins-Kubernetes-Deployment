@@ -39,15 +39,21 @@ list_of_files = [
 
     f"{project_name}/pipline/__init__.py",
     f"{project_name}/pipline/training_pipeline.py",
+    f"{project_name}/pipline/prediction_pipeline.py",
 
     f"{project_name}/utils/__init__.py",
     f"{project_name}/utils/main_utils.py",
 
-    "requirements.txt",
-    "main.py",
-    "setup.py",
+
     "config/model.yaml",
     "config/schema.yaml",
+    "static/css/style.css",
+    "templates/index.html",
+    "app.py",
+    "main.py",
+    "requirements.txt",
+    "setup.py",
+
 ]
 
 

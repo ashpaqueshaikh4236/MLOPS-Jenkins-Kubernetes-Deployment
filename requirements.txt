@@ -20,4 +20,6 @@ mypy-boto3-s3
 botocore
 uvicorn
 mlflow
+flask-cors
+Flask
 -e .
