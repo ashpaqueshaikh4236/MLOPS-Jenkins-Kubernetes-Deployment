@@ -1,12 +1,12 @@
 pipeline {
     agent any
 
-    stages {
-        stage('1. Git Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-            }
-        }
+    // stages {
+    //     stage('1. Git Checkout') {
+    //         steps {
+    //             git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
+    //         }
+    //     }
 
         stage('2. Trivy Scan') {
             steps {
@@ -87,7 +87,7 @@ pipeline {
             steps {
 
                 sh "kubectl apply -f Kubernetes/service.yml"
-                
+
             }
         }
 
