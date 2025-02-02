@@ -1,0 +1,8 @@
+# Exclude Jenkinsfile
+Jenkinsfile
+
+# Exclude Dockerfile
+Dockerfile
+
+# Exclude Kubernetes YAML files
+Kubernetes/*
