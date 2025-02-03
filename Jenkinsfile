@@ -16,36 +16,9 @@ pipeline {
 
         stage('3. Build Docker Image') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
-                    string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY'),
-                    string(credentialsId: 'mlflow_tracking_uri', variable: 'MLFLOW_TRACKING_URI'),
-                    string(credentialsId: 'mlflow_tracking_username', variable: 'MLFLOW_TRACKING_USERNAME'),
-                    string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
-                ]) {
-                    script {
-                        // Construct build arguments as a string
-                        def buildArgs = "--build-arg MONGODB_URL=${MONGODB_URL} " +
-                                         "--build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} " +
-                                         "--build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} " +
-                                         "--build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} " +
-                                         "--build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} " +
-                                         "--build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}"
-        
-                        // Print the full docker build command for debugging
-                        echo "Docker build command: docker build ${buildArgs} -t my-flask-app ."
-        
-                        // Run the docker build command with the correct context (.)
-                        sh "docker build ${buildArgs} -t my-flask-app ."
-                    }
-                }
+                sh "docker build -t my-flask-app ."
             }
         }
-
-        
-        
-        
 
         stage('4. Create ECR repo') {
             steps {
