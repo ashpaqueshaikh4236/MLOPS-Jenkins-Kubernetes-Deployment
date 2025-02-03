@@ -85,12 +85,6 @@ pipeline {
                     sh """
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
                     sed -i 's|\${AWS_ACCOUNT_ID}|'"${AWS_ACCOUNT_ID}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${AWS_ACCESS_KEY_ID}|'"${AWS_ACCESS_KEY_ID}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${AWS_SECRET_ACCESS_KEY}|'"${AWS_SECRET_ACCESS_KEY}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${MONGODB_URL}|'"${MONGODB_URL}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${MLFLOW_TRACKING_URI}|'"${MLFLOW_TRACKING_URI}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${MLFLOW_TRACKING_USERNAME}|'"${MLFLOW_TRACKING_USERNAME}"'|g' Kubernetes/deployment.yml
-                    // sed -i 's|\${MLFLOW_TRACKING_PASSWORD}|'"${MLFLOW_TRACKING_PASSWORD}"'|g' Kubernetes/deployment.yml
                     kubectl apply -f Kubernetes/deployment.yml
                     """
                 }
