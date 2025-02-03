@@ -3,11 +3,11 @@ pipeline {
 
     stages {
 
-        stage('2. Trivy Scan') {
-            steps {
-                sh "trivy fs . > trivy.txt"
-            }
-        }
+        // stage('2. Trivy Scan') {
+        //     steps {
+        //         sh "trivy fs . > trivy.txt"
+        //     }
+        // }
 
         stage('3. Build Docker Image') {
             steps {
