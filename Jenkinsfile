@@ -14,11 +14,24 @@ pipeline {
             }
         }
 
-        stage('3. Build Docker Image') {
+       stage('3.Build Docker Image') {
             steps {
-                sh "docker build --env-file .env -t my-flask-app ."
+                withCredentials([
+                    string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
+                    string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY'),
+                    string(credentialsId: 'mlflow_tracking_uri', variable: 'MLFLOW_TRACKING_URI'),
+                    string(credentialsId: 'mlflow_tracking_username', variable: 'MLFLOW_TRACKING_USERNAME'),
+                    string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
+                ]) {
+                    script {
+                        // Build Docker image for Flask app
+                        def customImage = docker.build("my-flask-app", ".")
+                    }
+                }
             }
         }
+
 
         stage('4. Create ECR repo') {
             steps {
