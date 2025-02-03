@@ -76,7 +76,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
 
-                    sh "kubectl apply -f deployment.yml"
+                    sh "kubectl apply -f Kubernetes/deployment.yml"
                     
                 }
             }
