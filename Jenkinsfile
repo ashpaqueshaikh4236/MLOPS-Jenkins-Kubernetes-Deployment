@@ -25,7 +25,7 @@ pipeline {
                     string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
                 ]) {
                     script {
-                        // Use sh with environment variables to prevent exposing secrets in logs
+                        // Ensure no empty spaces or invalid characters
                         def buildArgs = """
                             --build-arg MONGODB_URL=${MONGODB_URL} \
                             --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
@@ -34,15 +34,19 @@ pipeline {
                             --build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} \
                             --build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}
                         """
-                        
+        
+                        // Log the command to debug
+                        echo "Running Docker build with arguments: ${buildArgs}"
+        
                         // Run the docker build command with the correct context (.)
                         sh "docker build ${buildArgs} -t my-flask-app ."
                     }
                 }
             }
         }
-
-
+        
+        
+        
 
         stage('4. Create ECR repo') {
             steps {
