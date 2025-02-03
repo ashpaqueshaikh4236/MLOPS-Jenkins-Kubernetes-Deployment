@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     stages {
-        // stage('1. Git Checkout') {
-        //     steps {
-        //         git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-        //     }
-        // }
+        stage('1. Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
+            }
+        }
 
         stage('2. Trivy Scan') {
             steps {
