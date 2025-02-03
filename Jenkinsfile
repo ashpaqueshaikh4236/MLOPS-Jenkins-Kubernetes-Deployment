@@ -18,7 +18,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
                                  string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
-                                 string(credentialsId: 'secret-access', variable: 'AWS_SECRET_ACCESS_KEY'),
+                                 string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY'),
                                  string(credentialsId: 'mlflow_tracking_uri', variable: 'MLFLOW_TRACKING_URI'),
                                  string(credentialsId: 'mlflow_tracking_username', variable: 'MLFLOW_TRACKING_USERNAME'),
                                  string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')]) {
