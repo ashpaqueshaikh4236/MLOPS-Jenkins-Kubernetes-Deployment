@@ -74,14 +74,11 @@ pipeline {
 
         stage('8. Deploy to Kubernetes') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'aws-access', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'aws-secret', variable: 'AWS_SECRET_ACCESS_KEY')
-                ]) {
-                    sh '''
-                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com
+                withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
+                    sh """
+                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
                     kubectl apply -f Kubernetes/deployment.yml
-                    '''
+                    """
                 }
             }
         }
