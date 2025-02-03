@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mlops-container
-        image: 116981779709.dkr.ecr.ap-south-1.amazonaws.com/mlops-project-repo:latest
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/mlops-project-repo:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
