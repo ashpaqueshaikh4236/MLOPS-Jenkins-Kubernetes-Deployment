@@ -2,11 +2,6 @@ pipeline {
     agent any
 
     stages {
-        // stage('1. Git Checkout') {
-        //     steps {
-        //         git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-        //     }
-        // }
 
         stage('2. Trivy Scan') {
             steps {
@@ -36,11 +31,10 @@ pipeline {
             }
         }
 
-
         stage('4. Create ECR repo') {
             steps {
-                withCredentials([string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY'), 
-                                 string(credentialsId: 'secret-key', variable: 'AWS_SECRET_KEY')]) {
+                withCredentials([string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY'), 
+                                 string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_KEY')]) {
                     sh """
                     aws configure set aws_access_key_id $AWS_ACCESS_KEY
                     aws configure set aws_secret_access_key $AWS_SECRET_KEY
@@ -83,8 +77,6 @@ pipeline {
                     docker rmi my-flask-app
                     docker images
                     """
-                    
-
                 }
             }
         }
@@ -101,15 +93,10 @@ pipeline {
             }
         }
 
-
         stage('9. Expose Service in Kubernetes') {
             steps {
-
                 sh "kubectl apply -f Kubernetes/service.yml"
-
             }
         }
-
     }
 }
-
