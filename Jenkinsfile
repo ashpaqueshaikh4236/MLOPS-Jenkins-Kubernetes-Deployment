@@ -25,18 +25,16 @@ pipeline {
                     string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
                 ]) {
                     script {
-                        // Ensure no empty spaces or invalid characters
-                        def buildArgs = """
-                            --build-arg MONGODB_URL=${MONGODB_URL} \
-                            --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-                            --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                            --build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} \
-                            --build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} \
-                            --build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}
-                        """
+                        // Construct build arguments as a string
+                        def buildArgs = "--build-arg MONGODB_URL=${MONGODB_URL} " +
+                                         "--build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} " +
+                                         "--build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} " +
+                                         "--build-arg MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} " +
+                                         "--build-arg MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} " +
+                                         "--build-arg MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}"
         
-                        // Log the command to debug
-                        echo "Running Docker build with arguments: ${buildArgs}"
+                        // Print the full docker build command for debugging
+                        echo "Docker build command: docker build ${buildArgs} -t my-flask-app ."
         
                         // Run the docker build command with the correct context (.)
                         sh "docker build ${buildArgs} -t my-flask-app ."
@@ -44,6 +42,7 @@ pipeline {
                 }
             }
         }
+
         
         
         
