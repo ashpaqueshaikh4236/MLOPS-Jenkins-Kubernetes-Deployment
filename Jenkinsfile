@@ -16,7 +16,7 @@ pipeline {
 
         stage('3. Build Docker Image') {
             steps {
-                sh "docker build -t my-flask-app ."
+                sh "docker build --env-file .env -t my-flask-app ."
             }
         }
 
