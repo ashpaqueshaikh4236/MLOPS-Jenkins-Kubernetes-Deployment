@@ -18,16 +18,3 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
-        # env:
-        # - name: AWS_ACCESS_KEY_ID
-        #   value: "${AWS_ACCESS_KEY_ID}"
-        # - name: AWS_SECRET_ACCESS_KEY
-        #   value: "${AWS_SECRET_ACCESS_KEY}"
-        # - name: MONGODB_URL
-        #   value: "${MONGODB_URL}"
-        # - name: MLFLOW_TRACKING_URI
-        #   value: "${MLFLOW_TRACKING_URI}"
-        # - name: MLFLOW_TRACKING_USERNAME
-        #   value: "${MLFLOW_TRACKING_USERNAME}"
-        # - name: MLFLOW_TRACKING_PASSWORD
-        #   value: "${MLFLOW_TRACKING_PASSWORD}"
