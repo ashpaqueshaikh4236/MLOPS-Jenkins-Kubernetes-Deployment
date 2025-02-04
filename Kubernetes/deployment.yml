@@ -20,4 +20,7 @@ spec:
         - containerPort: 5000
         env:
           - name: MONGODB_URL
-            value: "mongodb+srv://usvisadb:usvisadb12345@cluster1.mgflf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1"
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: MONGODB_URL
