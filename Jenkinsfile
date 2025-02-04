@@ -75,14 +75,14 @@ pipeline {
         stage('8.Deploy to Kubernetes') {
             steps {
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID'),
-                                 string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY'),
-                                 string(credentialsId: 'secret-key', variable: 'AWS_SECRET_KEY')]) {
+                                 string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                                 string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh """
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
         
                     kubectl create secret generic my-secret \
-                      --from-literal=AWS_ACCESS_KEY="${AWS_ACCESS_KEY}" \
-                      --from-literal=AWS_SECRET_KEY="${AWS_SECRET_KEY}" \
+                      --from-literal=AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+                      --from-literal=AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
                       --dry-run=client -o yaml | kubectl apply -f -
         
                     sed -i 's|\${AWS_ACCOUNT_ID}|'"${AWS_ACCOUNT_ID}"'|g' Kubernetes/deployment.yml
