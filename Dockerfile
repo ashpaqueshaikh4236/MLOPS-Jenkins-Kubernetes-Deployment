@@ -1,16 +1,17 @@
-FROM python:3.9-slim
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim-buster
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy all files into the container
+# Copy the current directory contents into the container at /app
 COPY . .
 
-# Install dependencies
+# Install the required packages
 RUN pip install -r requirements.txt
 
-# Expose port
+# Expose the port that the Flask app runs on
 EXPOSE 5000
 
-# Run app
-CMD ["python", "app.py"]
+# Command to run the Flask application for production
+CMD ["python","app.py"]
