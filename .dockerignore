@@ -4,6 +4,8 @@ Jenkinsfile
 # Exclude Dockerfile
 Dockerfile
 
-
 # Exclude Kubernetes YAML files
 Kubernetes/*
+
+Kubernetes
+trivy.txt
