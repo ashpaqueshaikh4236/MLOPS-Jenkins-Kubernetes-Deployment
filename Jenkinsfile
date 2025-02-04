@@ -74,12 +74,12 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL')]) {
+                withCredentials([string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
+                                 string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
                     sh """
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
                     
                     kubectl create secret generic my-secret --from-literal=MONGODB_URL="${MONGODB_URL}" --dry-run=client -o yaml | kubectl apply -f -
-                    
                     sed -i 's|\${AWS_ACCOUNT_ID}|'"${AWS_ACCOUNT_ID}"'|g' Kubernetes/deployment.yml
                     kubectl apply -f Kubernetes/deployment.yml
                     """
