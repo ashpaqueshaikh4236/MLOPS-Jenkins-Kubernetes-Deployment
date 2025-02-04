@@ -4,5 +4,7 @@ Jenkinsfile
 # Exclude Dockerfile
 Dockerfile
 
+.env
+
 # Exclude Kubernetes YAML files
 Kubernetes/*
