@@ -101,7 +101,18 @@ pipeline {
         }
 
 
-        stage('9. Expose Service in Kubernetes') {
+        stage('9. Restart Deployment to Apply Changes') {
+            steps {
+                script {
+                    // Restart deployment to apply new changes
+                    sh "kubectl rollout restart deployment mlops-deployment"
+                    
+                }
+            }
+        }
+
+
+        stage('10. Expose Service in Kubernetes') {
             steps {
 
                 sh "kubectl apply -f Kubernetes/service.yml"
