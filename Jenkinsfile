@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-       stage('3.Build Docker Image') {
+       stage('3. Build Docker Image') {
             steps {
                 withCredentials([
                     string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
@@ -25,12 +25,20 @@ pipeline {
                     string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
                 ]) {
                     script {
-                        // Build Docker image for Flask app
-                        def customImage = docker.build("my-flask-app", ".")
+                        // Build Docker image for Flask app and pass environment variables as build args
+                        def customImage = docker.build("my-flask-app", """
+                            --build-arg MONGODB_URL=${env.MONGODB_URL} 
+                            --build-arg AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} 
+                            --build-arg AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY} 
+                            --build-arg MLFLOW_TRACKING_URI=${env.MLFLOW_TRACKING_URI} 
+                            --build-arg MLFLOW_TRACKING_USERNAME=${env.MLFLOW_TRACKING_USERNAME} 
+                            --build-arg MLFLOW_TRACKING_PASSWORD=${env.MLFLOW_TRACKING_PASSWORD} .
+                        """)
                     }
                 }
             }
         }
+
 
 
         stage('4. Create ECR repo') {
