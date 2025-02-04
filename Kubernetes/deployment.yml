@@ -19,8 +19,13 @@ spec:
         ports:
         - containerPort: 5000
         env:
-          - name: MONGODB_URL
+          - name: AWS_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 name: my-secret
-                key: MONGODB_URL
+                key: AWS_ACCESS_KEY
+          - name: AWS_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: my-secret
+                key: AWS_SECRET_KEY
