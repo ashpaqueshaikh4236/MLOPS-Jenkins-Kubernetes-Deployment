@@ -16,14 +16,9 @@ pipeline {
 
       stage('3. Build Docker Image') {
             steps {
-                script {
-                    // Build Docker image using the .env file
-                    def customImage = docker.build("my-flask-app", "--build-arg ENV_FILE=.env .")
-                }
+                sh 'docker build -t my-flask-app .'
             }
         }
-
-
 
         stage('4. Create ECR repo') {
             steps {
