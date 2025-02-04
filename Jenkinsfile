@@ -104,7 +104,6 @@ pipeline {
         stage('9. Restart Deployment to Apply Changes') {
             steps {
                 script {
-                    // Restart deployment to apply new changes
                     sh "kubectl rollout restart deployment mlops-deployment"
                     
                 }
