@@ -1,8 +1,15 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
 
+# Set build arguments
+ARG MONGODB_URL
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG MLFLOW_TRACKING_URI
+ARG MLFLOW_TRACKING_USERNAME
+ARG MLFLOW_TRACKING_PASSWORD
 
-# Set environment variables from Jenkins credentials
+# Set environment variables from build arguments
 ENV MONGODB_URL=${MONGODB_URL}
 ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
