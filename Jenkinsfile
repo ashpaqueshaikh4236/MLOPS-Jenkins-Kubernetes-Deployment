@@ -17,7 +17,7 @@ pipeline {
     post {
         success {
             emailext(
-                to: "${env.RECIPIENTS}",
+                to: "ashfaq664236@gmail.com",
                 from: "newdigital3344@gmail.com",  // Sender email
                 subject: "Build Success: ${BUILD_NUMBER}",
                 body: """
@@ -30,7 +30,7 @@ pipeline {
 
         failure {
             emailext(
-                to: "${env.RECIPIENTF}",
+                to: "ashfaq664236@gmail.com",
                 from: "newdigital3344@gmail.com",  // Sender email
                 subject: "Build Failed: ${BUILD_NUMBER}",
                 body: """
