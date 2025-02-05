@@ -11,7 +11,7 @@ pipeline {
 
     post {
         success {
-            withCredentials([string(credentialsId: 'recipientp', variable: 'RECIPIENTP')]) {
+            withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
                     to: "${RECIPIENTP}",
                     from: "${RECIPIENTP}",
@@ -25,8 +25,8 @@ pipeline {
             }
         }
         failure {
-            withCredentials([string(credentialsId: 'recipientf', variable: 'RECIPIENTF'),
-                             string(credentialsId: 'recipientp', variable: 'RECIPIENTP')]) {
+            withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
+                             string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
                     to: "${RECIPIENTF}",
                     from: "${RECIPIENTP}",
