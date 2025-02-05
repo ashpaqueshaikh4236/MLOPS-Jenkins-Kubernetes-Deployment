@@ -1,13 +1,7 @@
 pipeline {
     agent any
 
-
-    // stages {
-    //     stage('1. Git Checkout') {
-    //         steps {
-    //             git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-    //         }
-    //     }
+    stages {
 
         stage('2. Trivy Scan') {
             steps {
@@ -15,9 +9,9 @@ pipeline {
             }
         }
 
-      stage('3. Build Docker Image') {
+        stage('3. Build Docker Image') {
             steps {
-                sh 'docker build -trr my-flask-app .'
+                sh 'docker build -ttt my-flask-app .'
             }
         }
 
@@ -67,13 +61,11 @@ pipeline {
                     docker rmi my-flask-app
                     docker images
                     """
-                    
-
                 }
             }
         }
 
-        stage('8.Deploy to Kubernetes') {
+        stage('8. Deploy to Kubernetes') {
             steps {
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID'),
                                  string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
@@ -84,7 +76,7 @@ pipeline {
                                  string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')]) {
                     sh """
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
-        
+
                     kubectl create secret generic my-secret \
                       --from-literal=AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
                       --from-literal=AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
@@ -93,7 +85,7 @@ pipeline {
                       --from-literal=MLFLOW_TRACKING_USERNAME="${MLFLOW_TRACKING_USERNAME}" \
                       --from-literal=MLFLOW_TRACKING_PASSWORD="${MLFLOW_TRACKING_PASSWORD}" \
                       --dry-run=client -o yaml | kubectl apply -f -
-        
+
                     sed -i 's|\${AWS_ACCOUNT_ID}|'"${AWS_ACCOUNT_ID}"'|g' Kubernetes/deployment.yml
                     kubectl apply -f Kubernetes/deployment.yml
                     """
@@ -101,25 +93,20 @@ pipeline {
             }
         }
 
-
         stage('9. Restart Deployment to Apply Changes') {
             steps {
                 script {
                     sh "kubectl rollout restart deployment mlops-deployment"
-                    
                 }
             }
         }
 
-
         stage('10. Expose Service in Kubernetes') {
             steps {
-
                 sh "kubectl apply -f Kubernetes/service.yml"
-
             }
         }
-
+    }
 
     post {
         success {
