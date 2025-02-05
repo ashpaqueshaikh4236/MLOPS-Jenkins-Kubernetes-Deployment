@@ -15,7 +15,7 @@ pipeline {
             withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
                     to: "${RECIPIENTP}",
-                    from: "${RECIPIENTP}",
+                    from: "${RECIPIENTF}",
                     subject: "Build Success: ${BUILD_NUMBER}",
                     body: """
                         Dear user,
