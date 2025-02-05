@@ -1,84 +1,52 @@
 pipeline {
     agent any
 
-    environment {
-        RECIPIENTS = "newdigital3344@gmail.com"  // Email address for success notifications
-        RECIPIENTF = "ashfaq664236@gmail.com"    // Email address for failure notifications
-    }
 
     stages {
         stage('Hello') {
             steps {
-                eceeho 'Hello World'
+                echo 'Hello World'
             }
         }
     }
 
     post {
         success {
-            emailext(
-                to: "${env.RECIPIENTS}",
-                from: "newdigital3344@gmail.com",
-                subject: "Build Success: ${BUILD_NUMBER}",
-                body: """
-                    Dear user,
-                    The Jenkins build has succeeded.
-                """,
-                mimeType: 'text/html'
-            )
+            withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+                emailext(
+                    to: "${RECIPIENTP}",
+                    from: "${RECIPIENTP}",
+                    subject: "Build Success: ${BUILD_NUMBER}",
+                    body: """
+                        Dear user,
+                        The Jenkins build has succeeded.
+                    """,
+                    mimeType: 'text/html'
+                )
+            }
         }
 
         failure {
-            emailext(
-                to: "${env.RECIPIENTF}",
-                from: "newdigital3344@gmail.com",
-                subject: "Build Failed: ${BUILD_NUMBER}",
-                body: """
-                    Dear user,
-                    The Jenkins build has failed. Please check the console output for more details:
-                    ${env.BUILD_URL}console
-                """,
-                mimeType: 'text/html'
-            )
+            withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
+                             string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+                emailext(
+                    to: "${RECIPIENTF}",
+                    from: "${RECIPIENTF}",
+                    subject: "Build Failed: ${BUILD_NUMBER}",
+                    body: """
+                        Dear user,
+                        The Jenkins build has failed. Please check the console output for more details:
+                        ${env.BUILD_URL}console
+                    """,
+                    mimeType: 'text/html'
+                )
+            }
         }
     }
 }
 
 
-    // post {
-    //     success {
-    //         withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
-    //             emailext(
-    //                 to: "${RECIPIENTP}",
-    //                 from: "RECIPIENTP,
-    //                 subject: "Build Success: ${BUILD_NUMBER}",
-    //                 body: """
-    //                     Dear user,
-    //                     The Jenkins build has succeeded.
-    //                 """,
-    //                 mimeType: 'text/html'
-    //             )
-    //         }
-    //     }
-    //     failure {
-    //         withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
-    //                          string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
-    //             emailext(
-    //                 to: "${RECIPIENTF}",
-    //                 from: "RECIPIENTP,
-    //                 subject: "Build Failed: ${BUILD_NUMBER}",
-    //                 body: """
-    //                     Dear user,
-    //                     The Jenkins build has failed. Please check the console output for more details:
-    //                     ${env.BUILD_URL}console
-    //                 """,
-    //                 mimeType: 'text/html'
-    //             )
-    //         }
-    //     }
 
-
-        
         // stage('1. Git Checkout') {
         //     steps {
         //         git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
