@@ -14,8 +14,8 @@ pipeline {
         success {
             withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
-                    to: "newdigital3344@gmail.com",
-                    from: "newdigital3344@gmail.com",
+                    to: "${RECIPIENTP}",
+                    from: "${RECIPIENTP}",
                     subject: "Build Success: ${BUILD_NUMBER}",
                     body: """
                         Dear user,
@@ -30,8 +30,8 @@ pipeline {
             withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
                              string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
-                    to: "ashfaq664236@gmail.com",
-                    from: "newdigital3344@gmail.com",
+                    to: "${RECIPIENTF}",
+                    from: "${RECIPIENTP}",
                     subject: "Build Failed: ${BUILD_NUMBER}",
                     body: """
                         Dear user,
