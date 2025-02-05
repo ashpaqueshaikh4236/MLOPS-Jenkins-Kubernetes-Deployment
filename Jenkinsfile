@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        RECIPIENTS = "newdigital3344@gmail.com"  // Email address for notifications
-        RECIPIENTF = "ashfaq664236@gmail.com"    // Email address for notifications
+        RECIPIENTS = "newdigital3344@gmail.com"  // Email address for success notifications
+        RECIPIENTF = "ashfaq664236@gmail.com"    // Email address for failure notifications
     }
-
 
     stages {
         stage('Hello') {
@@ -19,7 +18,7 @@ pipeline {
         success {
             emailext(
                 to: "${env.RECIPIENTS}",
-                from: "newdigital3344@gmail.com",
+                from: "newdigital3344@gmail.com",  // Sender email
                 subject: "Build Success: ${BUILD_NUMBER}",
                 body: """
                     Dear user,
@@ -28,10 +27,11 @@ pipeline {
                 mimeType: 'text/html'
             )
         }
+
         failure {
             emailext(
                 to: "${env.RECIPIENTF}",
-                from: "newdigital3344@gmail.com",
+                from: "newdigital3344@gmail.com",  // Sender email
                 subject: "Build Failed: ${BUILD_NUMBER}",
                 body: """
                     Dear user,
@@ -42,6 +42,8 @@ pipeline {
             )
         }
     }
+}
+
 
     // post {
     //     success {
@@ -74,8 +76,7 @@ pipeline {
     //             )
     //         }
     //     }
-    }
-}
+
 
         
         // stage('1. Git Checkout') {
