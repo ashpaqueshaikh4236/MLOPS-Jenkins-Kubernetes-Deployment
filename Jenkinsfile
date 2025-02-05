@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        RECIPIENTS = "newdigital3344@gmail.com"  // Email address for notifications
+        RECIPIENTF = "ashfaq664236@gmail.com"    // Email address for notifications
+    }
+
+
     stages {
         stage('Hello') {
             steps {
@@ -11,35 +17,63 @@ pipeline {
 
     post {
         success {
-            withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
-                emailext(
-                    to: "${RECIPIENTP}",
-                    from: "RECIPIENTP,
-                    subject: "Build Success: ${BUILD_NUMBER}",
-                    body: """
-                        Dear user,
-                        The Jenkins build has succeeded.
-                    """,
-                    mimeType: 'text/html'
-                )
-            }
+            emailext(
+                to: "${env.RECIPIENTS}",
+                from: "newdigital3344@gmail.com",
+                subject: "Build Success: ${BUILD_NUMBER}",
+                body: """
+                    Dear user,
+                    The Jenkins build has succeeded.
+                """,
+                mimeType: 'text/html'
+            )
         }
         failure {
-            withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
-                             string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
-                emailext(
-                    to: "${RECIPIENTF}",
-                    from: "RECIPIENTP,
-                    subject: "Build Failed: ${BUILD_NUMBER}",
-                    body: """
-                        Dear user,
-                        The Jenkins build has failed. Please check the console output for more details:
-                        ${env.BUILD_URL}console
-                    """,
-                    mimeType: 'text/html'
-                )
-            }
+            emailext(
+                to: "${env.RECIPIENTF}",
+                from: "newdigital3344@gmail.com",
+                subject: "Build Failed: ${BUILD_NUMBER}",
+                body: """
+                    Dear user,
+                    The Jenkins build has failed. Please check the console output for more details:
+                    ${env.BUILD_URL}console
+                """,
+                mimeType: 'text/html'
+            )
         }
+    }
+
+    // post {
+    //     success {
+    //         withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+    //             emailext(
+    //                 to: "${RECIPIENTP}",
+    //                 from: "RECIPIENTP,
+    //                 subject: "Build Success: ${BUILD_NUMBER}",
+    //                 body: """
+    //                     Dear user,
+    //                     The Jenkins build has succeeded.
+    //                 """,
+    //                 mimeType: 'text/html'
+    //             )
+    //         }
+    //     }
+    //     failure {
+    //         withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
+    //                          string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+    //             emailext(
+    //                 to: "${RECIPIENTF}",
+    //                 from: "RECIPIENTP,
+    //                 subject: "Build Failed: ${BUILD_NUMBER}",
+    //                 body: """
+    //                     Dear user,
+    //                     The Jenkins build has failed. Please check the console output for more details:
+    //                     ${env.BUILD_URL}console
+    //                 """,
+    //                 mimeType: 'text/html'
+    //             )
+    //         }
+    //     }
     }
 }
 
