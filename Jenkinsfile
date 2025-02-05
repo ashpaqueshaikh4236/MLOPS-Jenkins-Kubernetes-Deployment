@@ -17,17 +17,15 @@ pipeline {
                     string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')
                 ]) {
                     sh """
-                        # Docker login to ECR
                         aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
                         
-                        # Run the Docker container with secret environment variables
                         docker run -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
                                    -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
                                    -e MONGODB_URL=${MONGODB_URL} \
                                    -e MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI} \
                                    -e MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME} \
                                    -e MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD} \
-                                   ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/your-image:latest
+                                   ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/mlops-project-repo:latest
                     """
                 }
             }
