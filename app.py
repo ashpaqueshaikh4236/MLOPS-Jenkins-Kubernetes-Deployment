@@ -51,7 +51,7 @@ def index():
 
     return render_template("usvisa.html", context="Rendering")
 
-@app.route("/train", methods=["GET"])
+@app.route("/modelretrainingpipeline", methods=["GET"])
 def train_route():
     try:
         train_pipeline = TrainPipeline()
