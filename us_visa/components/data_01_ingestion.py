@@ -36,7 +36,6 @@ class DataIngestion:
 
         except Exception as e:
             raise USvisaException(e,sys)
-        
 
     def split_data_as_train_test(self,dataframe: DataFrame) ->None:
         logging.info("Entered split_data_as_train_test method of Data_Ingestion class")

@@ -6,28 +6,28 @@ grid_search:
     verbose: 5
     scoring: f1 
 model_selection:
-  module_0:
-    class: KNeighborsClassifier
-    module: sklearn.neighbors
-    params:
-      algorithm: kd_tree
-      weights: uniform
-      n_neighbors: 3
-    search_param_grid:
-      algorithm:
-      - auto
-      - ball_tree
-      - kd_tree
-      - brute
-      weights:
-      - uniform
-      - distance
-      n_neighbors:
-      - 3
-      - 4
-      - 5
-      - 7
-      - 9
+  # module_0:
+  #   class: KNeighborsClassifier
+  #   module: sklearn.neighbors
+  #   params:
+  #     algorithm: kd_tree
+  #     weights: uniform
+  #     n_neighbors: 3
+  #   search_param_grid:
+  #     algorithm:
+  #     - auto
+  #     - ball_tree
+  #     - kd_tree
+  #     - brute
+  #     weights:
+  #     - uniform
+  #     - distance
+  #     n_neighbors:
+  #     - 3
+  #     - 4
+  #     - 5
+  #     - 7
+  #     - 9
       
   module_1:
     class: RandomForestClassifier
