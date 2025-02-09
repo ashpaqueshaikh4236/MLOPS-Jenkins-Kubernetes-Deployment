@@ -141,72 +141,7 @@ class TrainPipeline:
         except Exception as e:
             logging.error(f"An error occurred during pipeline execution: {str(e)}")
             raise e
-        
-
-    # def run_pipeline(self) -> None:
-    #     try:
-    #         data_ingestion_artifact = self.start_data_ingestion()
-    #         data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-
-    #         if drift_status:  
-    #             logging.info("Drift detected! Proceeding with retraining...")
-    #             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
-    #             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-
-    #         else:
-    #             logging.info("No drift found, validating model performance on new data...")
-    #             model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=None)
-
-    #             if not model_validate_artifact.is_model_accepted:
-    #                 logging.info("Model performance degraded! Retraining required...")
-    #                 data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
-    #                 model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-    #             else:
-    #                 logging.info("Model is performing well, skipping retraining.")
-    #                 return
-
-    #         if model_trainer_artifact.test_data_metric_artifact.f1_score > self.model_trainer_config.expected_f1_score_test_data:
-    #             model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
-
-    #             if model_validate_artifact.is_model_accepted:
-    #                 model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
-    #             else:
-    #                 logging.info("New model not accepted, skipping deployment.")
-    #         else:
-    #             logging.info(f"Model F1-score ({model_trainer_artifact.test_data_metric_artifact.f1_score}) is not better than expected ({self.model_trainer_config.expected_f1_score_test_data}), skipping retraining.")
-
-    #     except Exception as e:
-    #         logging.error(f"An error occurred during pipeline execution: {str(e)}")
-    #         raise e
-
-
-    # def run_pipeline(self) -> None:
-    #     try:
-    #         data_ingestion_artifact = self.start_data_ingestion()
-    #         data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-
-    #         if drift_status == False:
-    #             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
-    #             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-
-    #             if model_trainer_artifact.test_data_metric_artifact.f1_score > self.model_trainer_config.expected_f1_score_test_data:
-    #                 model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
-
-    #                 if not model_validate_artifact.is_model_accepted:
-    #                     logging.info("Model not accepted. Skipping model pusher...............")
-    #                 else:
-    #                     model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
-
-    #             else:
-    #                 logging.info(f"Expected_f1_score_test_data is {self.model_trainer_config.expected_f1_score_test_data}")
-    #                 logging.info(f"Model_f1_score_test_data is {model_trainer_artifact.test_data_metric_artifact.f1_score}")
-    #                 logging.info("Alredy best f1_score model is in cloud pipepline skip..........")
-    #         else:
-    #             logging.info("Validation complete: No drift found, all pipeline steps skipped...............")
-
-    #     except Exception as e:
-    #         logging.error(f"An error occurred during pipeline execution: {str(e)}")
-    #         raise e
+    
 
 
  
