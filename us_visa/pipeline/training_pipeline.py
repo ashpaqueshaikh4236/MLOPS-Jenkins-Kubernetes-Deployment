@@ -127,8 +127,13 @@ class TrainPipeline:
                 else:
                     logging.info("Model is performing well, skipping retraining.")
                     return
+                
+            if isinstance(model_trainer_artifact.test_data_metric_artifact, dict):
+                f1_score = model_trainer_artifact.test_data_metric_artifact['f1_score']
+            else:
+                f1_score = model_trainer_artifact.test_data_metric_artifact.f1_score
 
-            if model_trainer_artifact.test_data_metric_artifact.f1_score > self.model_trainer_config.expected_f1_score_test_data:
+            if f1_score > self.model_trainer_config.expected_f1_score_test_data:
                 model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
 
                 if model_validate_artifact.is_model_accepted:
