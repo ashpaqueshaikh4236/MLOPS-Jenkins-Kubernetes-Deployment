@@ -111,6 +111,7 @@ class TrainPipeline:
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
             
+            drift_status=True
             if drift_status:  
                 logging.info("Drift detected! Proceeding with retraining...")
                 data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
@@ -125,7 +126,7 @@ class TrainPipeline:
                     data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
                     model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
                 else:
-                    logging.info("Model is performing well, skipping retraining.")
+                    logging.info("Model is performing well, skipping pipeline.")
                     return
                 
             if isinstance(model_trainer_artifact.test_data_metric_artifact, dict):
@@ -139,14 +140,15 @@ class TrainPipeline:
                 if model_validate_artifact.is_model_accepted:
                     model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
                 else:
-                    logging.info("New model not accepted, skipping deployment.")
+                    logging.info("Model not accepted // Model is performing well  skipping push to production.")
             else:
-                logging.info(f"Model F1-score ({model_trainer_artifact.test_data_metric_artifact.f1_score}) is not better than expected ({self.model_trainer_config.expected_f1_score_test_data}), skipping retraining.")
+                logging.info(f"Model F1-score ({f1_score}) is not better than expected ({self.model_trainer_config.expected_f1_score_test_data}), skipping pipeline.")
 
         except Exception as e:
             logging.error(f"An error occurred during pipeline execution: {str(e)}")
             raise e
     
+
 
 
  
