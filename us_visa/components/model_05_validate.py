@@ -61,21 +61,20 @@ class ModelValidate:
             trained_model_test_data_f1_score = None  
             if self.model_trainer_artifact is not None:
 
-                if isinstance(self.model_trainer_artifact.test_data_metric_artifact, dict):
-                    trained_model_test_data_f1_score = self.model_trainer_artifact.test_data_metric_artifact['f1_score']
-                else:
-                    trained_model_test_data_f1_score = self.model_trainer_artifact.test_data_metric_artifact.f1_score
+                trained_model_test_data_f1_score = self.model_trainer_artifact.test_data_metric_artifact.get('f1_score') if isinstance(self.model_trainer_artifact.test_data_metric_artifact, dict) else self.model_trainer_artifact.test_data_metric_artifact.f1_score
 
             if trained_model_test_data_f1_score is not None:
+                logging.info(f"Expected_f1_score_train_test is {self.model_trainer_config.expected_f1_score_test_data}")
                 is_model_accepted = trained_model_test_data_f1_score > best_model_f1_score
+                logging.info(f"Model_f1_score_train_test is {trained_model_test_data_f1_score}")
             elif best_model_f1_score > 0:
-                is_model_accepted = best_model_f1_score >= self.model_trainer_config.expected_f1_score_test_data
+                logging.info(f"Best_Model_Expected_f1_score_new_test_data is {self.model_trainer_config.expected_best_model_f1_score_new_test_data}")
+                is_model_accepted = best_model_f1_score >= self.model_trainer_config.expected_best_model_f1_score_new_test_data
+                logging.info(f"Best_Model_f1_score_new_test_data is {best_model_f1_score}")
             else:
                 logging.info("No trained or best model available, forcing retraining.")
                 is_model_accepted = False
 
-            logging.info(f"Trained Model Test Data F1-Score: {trained_model_test_data_f1_score}")
-            logging.info(f"Best Model Test Data (S3) F1-Score: {best_model_f1_score}")
 
             return ValidateModelResponse(
                 trained_model_test_data_f1_score=trained_model_test_data_f1_score,

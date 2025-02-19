@@ -49,8 +49,9 @@ class ModelTrainerConfig:
     model_trainer_dir: str = os.path.join(training_pipeline_config.artifact_dir, MODEL_TRAINER_DIR_NAME)
     trained_model_file_path: str = os.path.join(model_trainer_dir, MODEL_TRAINER_TRAINED_MODEL_DIR, MODEL_FILE_NAME)
     expected_f1_score_train_data: float = MODEL_TRAINER_EXPECTED_F1_SCORE_TRAIN_DATA
-    model_config_file_path: str = MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
     expected_f1_score_test_data = MODEL_TRAINER_TRAINED_F1_SCORE_TEST_DATA
+    expected_best_model_f1_score_new_test_data = MODEL_TRAINER_BEST_MODEL_F1_SCORE_NEW_TEST_DATA
+    model_config_file_path: str = MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
 
 
 @dataclass

@@ -31,10 +31,9 @@ class TrainPipeline:
             logging.info("<----------Entered the start_data_ingestion method of TrainPipeline class---------->")
             logging.info("Getting the data from mongodb")
             data_ingestion = DataIngestion(data_ingestion_config=self.data_ingestion_config)
-            data_ingestion_artifact = data_ingestion.initiate_data_ingestion()
-            logging.info("Got the train_set and test_set from mongodb")
+            data_ingestion_artifact, data_value = data_ingestion.initiate_data_ingestion()
             logging.info("----->Exited the start_data_ingestion method of TrainPipeline class<-----")
-            return data_ingestion_artifact
+            return data_ingestion_artifact, data_value
         except Exception as e:
             raise USvisaException(e, sys) from e
         
@@ -106,51 +105,46 @@ class TrainPipeline:
             raise USvisaException(e, sys)
         
 
+
+    
     def run_pipeline(self) -> None:
         try:
-            data_ingestion_artifact = self.start_data_ingestion()
-            data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-            
-            if drift_status:  
-                logging.info("Drift detected! Proceeding with retraining...")
-                data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
-                model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+            data_ingestion_artifact,data_value = self.start_data_ingestion()
 
-            else:
-                logging.info("No drift found, validating model performance on new data...")
-                model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=None)
+            if data_value:
+                data_validation_artifact, drift_status = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
 
-                if model_validate_artifact is None or not model_validate_artifact.is_model_accepted:
-                    logging.info("Model performance degraded or no valid model found! Retraining required...")
+                if drift_status:  
+                    logging.info("Drift detected! Proceeding with retraining...")
                     data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
                     model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+
                 else:
-                    logging.info("Model is performing well, skipping pipeline.")
-                    return
-                
-            if isinstance(model_trainer_artifact.test_data_metric_artifact, dict):
-                f1_score = model_trainer_artifact.test_data_metric_artifact['f1_score']
-            else:
-                f1_score = model_trainer_artifact.test_data_metric_artifact.f1_score
+                    logging.info("No drift found, validating model performance on new data...")
+                    model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=None)
 
-            if f1_score > self.model_trainer_config.expected_f1_score_test_data:
-                model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
+                    if model_validate_artifact is None or not model_validate_artifact.is_model_accepted:
+                        logging.info("Model performance degraded or no valid model found! Retraining required...")
+                        data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+                        model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+                    else:
+                        logging.info("Model is performing well, skipping pipeline.")
+                        return
+                    
+                f1_score = model_trainer_artifact.test_data_metric_artifact.get('f1_score') if isinstance(model_trainer_artifact.test_data_metric_artifact, dict) else model_trainer_artifact.test_data_metric_artifact.f1_score
 
-                if model_validate_artifact.is_model_accepted:
-                    model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
+                if f1_score > self.model_trainer_config.expected_f1_score_test_data:
+                    model_validate_artifact = self.start_model_validate(data_ingestion_artifact=data_ingestion_artifact, model_trainer_artifact=model_trainer_artifact)
+
+                    if model_validate_artifact.is_model_accepted:
+                        model_pusher_artifact = self.start_model_pusher(model_validate_artifact=model_validate_artifact)
+                    else:
+                        logging.info("Model not accepted // Model is performing well  skipping push to production.")
                 else:
-                    logging.info("Model not accepted // Model is performing well  skipping push to production.")
+                    logging.info(f"Model F1-score in test data ({f1_score}) is not better than expected ({self.model_trainer_config.expected_f1_score_test_data}), skipping pipeline.")
             else:
-                logging.info(f"Model F1-score ({f1_score}) is not better than expected ({self.model_trainer_config.expected_f1_score_test_data}), skipping pipeline.")
-
+                logging.info("<---------->No data change detected. Skipping All Pipeline<---------->")
         except Exception as e:
             logging.error(f"An error occurred during pipeline execution: {str(e)}")
             raise e
-    
-
-
-
- 
-
-
         
