@@ -12,7 +12,7 @@ from us_visa.entity.artifact_entity import DataIngestionArtifact
 from us_visa.exception import USvisaException
 from us_visa.logger import logging
 from us_visa.data_access.usvisa_data import USvisaData
-
+from us_visa.utils.main_utils import get_file_hash
 
 
 
@@ -22,7 +22,7 @@ class DataIngestion:
             self.data_ingestion_config = data_ingestion_config
         except Exception as e:
             raise USvisaException(e,sys)
-        
+    
 
 
     def export_data_into_feature_store(self) -> Union[Tuple[pd.DataFrame, bool], pd.DataFrame]:
@@ -35,30 +35,43 @@ class DataIngestion:
             feature_store_file_path = self.data_ingestion_config.feature_store_file_path
 
             if not os.path.exists(feature_store_file_path):
-                logging.info(f"{FILE_NAME} file does not exist. Creating and saving new file.")
+                logging.info(f"{FILE_NAME} file does not exist. Creating and saving new data file and track with dvc.")
                 dir_path = os.path.dirname(feature_store_file_path)
                 os.makedirs(dir_path, exist_ok=True)
                 dataframe.to_csv(feature_store_file_path, index=False, header=True)
+                import subprocess; subprocess.run(["dvc", "add", feature_store_file_path], check=True)
                 logging.info(f"Exported data to {feature_store_file_path}, total records: {len(dataframe)}")
                 return dataframe, True 
 
             else:
-                logging.info(f"{FILE_NAME} file exists. Comparing data sizes.")
+                logging.info(f"{FILE_NAME} file exists. Comparing existing data and new extracted and track with dvc.")
                 df = pd.read_csv(feature_store_file_path)
+                logging.info("Existing data hash file reading........")
+                old_dvc = get_file_hash(feature_store_file_path + ".dvc")
+                logging.info(f"Existing data hash file : {old_dvc}")
+
+                dir_path = os.path.dirname(feature_store_file_path)
+                os.makedirs(dir_path, exist_ok=True)
+                dataframe.to_csv(feature_store_file_path, index=False, header=True)
+                import subprocess; subprocess.run(["dvc", "add", feature_store_file_path], check=True)
+                logging.info("New extracted data hash file reading........")
+                new_dvc = get_file_hash(feature_store_file_path + ".dvc")
+                logging.info(f"New extracted data hash file : {new_dvc}")
+
                 logging.info(f"Existing data size: {len(df)}")
                 logging.info(f"New extracted data size: {len(dataframe)}")
 
-                if len(dataframe) > len(df):
-                    logging.info("New data is larger. Overwriting the file.")
-                    dir_path = os.path.dirname(feature_store_file_path)
-                    os.makedirs(dir_path, exist_ok=True)
-                    dataframe.to_csv(feature_store_file_path, index=False, header=True)
-                    logging.info(f"Exported data to {feature_store_file_path}, total records: {len(dataframe)}")
+                if old_dvc != new_dvc:
+                    logging.info(f"Existing data Size and hash file: {len(df)} & {old_dvc}")
+                    logging.info(f"New extracted data Size and hash file : {len(dataframe)} & {new_dvc}")
+                    logging.info("Data changes detect in Data Size and Hash File.")
                     return dataframe, True
 
 
                 else:
-                    logging.info("No Data changed.")
+                    logging.info(f"Existing data Size and hash file: {len(df)} & {old_dvc}")
+                    logging.info(f"New extracted data Size and hash file : {len(dataframe)} & {new_dvc}")
+                    logging.info("NO data changes detect in Data Size and Hash File.")
                     return dataframe, False
 
         except Exception as e:

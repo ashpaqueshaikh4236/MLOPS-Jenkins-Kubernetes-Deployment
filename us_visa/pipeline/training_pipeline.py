@@ -105,7 +105,6 @@ class TrainPipeline:
             raise USvisaException(e, sys)
         
 
-
     
     def run_pipeline(self) -> None:
         try:

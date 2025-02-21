@@ -10,6 +10,17 @@ from us_visa.exception import USvisaException
 from us_visa.logger import logging
 
 
+
+
+def get_file_hash(dvc_file_path: str) -> str:
+    try:
+        with open(dvc_file_path, "r") as dvc_file:
+            dvc_data = yaml.safe_load(dvc_file)
+            return dvc_data['outs'][0]['md5'] 
+    except Exception as e:
+        print
+
+
 def read_yaml_file(file_path: str) -> dict:
     try:
         with open(file_path, "rb") as yaml_file:
