@@ -6,13 +6,13 @@ from typing import Union,Tuple
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
-from us_visa.constants import FILE_NAME
-from us_visa.entity.config_entity import DataIngestionConfig
-from us_visa.entity.artifact_entity import DataIngestionArtifact
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.data_access.usvisa_data import USvisaData
-from us_visa.utils.main_utils import get_file_hash
+from usvisa.constants import FILE_NAME
+from usvisa.entity.config_entity import DataIngestionConfig
+from usvisa.entity.artifact_entity import DataIngestionArtifact
+from usvisa.exception import USvisaException
+from usvisa.logger import logging
+from usvisa.data_access.usvisa_data import USvisaData
+from usvisa.utils.main_utils import get_file_hash
 
 
 
@@ -44,7 +44,7 @@ class DataIngestion:
                 return dataframe, True 
 
             else:
-                logging.info(f"{FILE_NAME} file exists. Comparing existing data and new extracted and track with dvc.")
+                logging.info(f"{FILE_NAME} file exists. Comparing existing data and new extracted with dvc tracking.")
                 df = pd.read_csv(feature_store_file_path)
                 logging.info("Existing data hash file reading........")
                 old_dvc = get_file_hash(feature_store_file_path + ".dvc")

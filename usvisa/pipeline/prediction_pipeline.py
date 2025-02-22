@@ -1,10 +1,10 @@
 import os
 import sys
 
-from us_visa.entity.config_entity import USvisaPredictorConfig
-from us_visa.entity.s3_estimator import USvisaEstimator
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
+from usvisa.entity.config_entity import USvisaPredictorConfig
+from usvisa.entity.s3_estimator import USvisaEstimator
+from usvisa.exception import USvisaException
+from usvisa.logger import logging
 from pandas import DataFrame
 
 

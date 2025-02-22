@@ -9,12 +9,12 @@ from evidently.tabs import DataDriftTab
 
 from pandas import DataFrame
 
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.utils.main_utils import read_yaml_file, write_yaml_file
-from us_visa.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
-from us_visa.entity.config_entity import DataValidationConfig
-from us_visa.constants import SCHEMA_FILE_PATH
+from usvisa.exception import USvisaException
+from usvisa.logger import logging
+from usvisa.utils.main_utils import read_yaml_file, write_yaml_file
+from usvisa.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
+from usvisa.entity.config_entity import DataValidationConfig
+from usvisa.constants import SCHEMA_FILE_PATH
 
 
 class DataValidation:

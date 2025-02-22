@@ -5,12 +5,12 @@ from urllib.parse import urlparse
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from neuro_mf  import ModelFactory
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.utils.main_utils import load_numpy_array_data, load_object, save_object
-from us_visa.entity.config_entity import ModelTrainerConfig
-from us_visa.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifactTestData
-from us_visa.entity.estimator import USvisaModel
+from usvisa.exception import USvisaException
+from usvisa.logger import logging
+from usvisa.utils.main_utils import load_numpy_array_data, load_object, save_object
+from usvisa.entity.config_entity import ModelTrainerConfig
+from usvisa.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifactTestData
+from usvisa.entity.estimator import USvisaModel
 
 class ModelTrainer:
     def __init__(self, data_transformation_artifact: DataTransformationArtifact,model_trainer_config: ModelTrainerConfig):

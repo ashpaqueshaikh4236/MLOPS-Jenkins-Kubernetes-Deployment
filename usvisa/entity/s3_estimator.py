@@ -1,6 +1,6 @@
-from us_visa.cloud_storage.aws_storage import SimpleStorageService
-from us_visa.exception import USvisaException
-from us_visa.entity.estimator import USvisaModel
+from usvisa.cloud_storage.aws_storage import SimpleStorageService
+from usvisa.exception import USvisaException
+from usvisa.entity.estimator import USvisaModel
 import sys
 from pandas import DataFrame
 

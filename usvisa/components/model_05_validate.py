@@ -1,15 +1,15 @@
-from us_visa.entity.config_entity import ModelValidateConfig,ModelTrainerConfig
-from us_visa.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelValidateArtifact
+from usvisa.entity.config_entity import ModelValidateConfig,ModelTrainerConfig
+from usvisa.entity.artifact_entity import ModelTrainerArtifact, DataIngestionArtifact, ModelValidateArtifact
 from sklearn.metrics import f1_score
-from us_visa.exception import USvisaException
-from us_visa.constants import TARGET_COLUMN, CURRENT_YEAR
-from us_visa.logger import logging
+from usvisa.exception import USvisaException
+from usvisa.constants import TARGET_COLUMN, CURRENT_YEAR
+from usvisa.logger import logging
 import sys
 import pandas as pd
 from typing import Optional
-from us_visa.entity.s3_estimator import USvisaEstimator
+from usvisa.entity.s3_estimator import USvisaEstimator
 from dataclasses import dataclass
-from us_visa.entity.estimator import TargetValueMapping
+from usvisa.entity.estimator import TargetValueMapping
 
 @dataclass
 class ValidateModelResponse:

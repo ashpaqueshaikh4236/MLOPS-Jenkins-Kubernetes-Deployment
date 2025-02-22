@@ -1,17 +1,17 @@
 import sys
-from us_visa.exception import USvisaException
-from us_visa.logger import logging
-from us_visa.components.data_01_ingestion import DataIngestion
-from us_visa.components.data_02_validation import DataValidation
-from us_visa.components.data_03_transformation import DataTransformation
-from us_visa.components.model_04_trainer import ModelTrainer
-from us_visa.components.model_05_validate import ModelValidate
-from us_visa.components.model_06_pusher import ModelPusher
+from usvisa.exception import USvisaException
+from usvisa.logger import logging
+from usvisa.components.data_01_ingestion import DataIngestion
+from usvisa.components.data_02_validation import DataValidation
+from usvisa.components.data_03_transformation import DataTransformation
+from usvisa.components.model_04_trainer import ModelTrainer
+from usvisa.components.model_05_validate import ModelValidate
+from usvisa.components.model_06_pusher import ModelPusher
 
 
-from us_visa.entity.config_entity import (DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelValidateConfig,ModelPusherConfig)
+from usvisa.entity.config_entity import (DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelValidateConfig,ModelPusherConfig)
 
-from us_visa.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,ModelTrainerArtifact,ModelValidateArtifact,ModelPusherArtifact)
+from usvisa.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,ModelTrainerArtifact,ModelValidateArtifact,ModelPusherArtifact)
 
 
 

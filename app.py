@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from us_visa.constants import APP_HOST, APP_PORT
-from us_visa.pipeline.prediction_pipeline import USvisaData, USvisaClassifier
-from us_visa.pipeline.training_pipeline import TrainPipeline
+from usvisa.pipeline.prediction_pipeline import USvisaData, USvisaClassifier
+from usvisa.pipeline.training_pipeline import TrainPipeline
 
 app = Flask(__name__)
 CORS(app) 
@@ -61,4 +60,4 @@ def train_route():
         return f"Error Occurred! {e}"
 
 if __name__ == "__main__":
-    app.run(host=APP_HOST, port=APP_PORT, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
