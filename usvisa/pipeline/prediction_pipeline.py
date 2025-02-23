@@ -1,4 +1,3 @@
-import os
 import sys
 
 from usvisa.entity.config_entity import USvisaPredictorConfig
@@ -9,22 +8,7 @@ from pandas import DataFrame
 
 
 class USvisaData:
-    def __init__(self,
-                continent,
-                education_of_employee,
-                has_job_experience,
-                requires_job_training,
-                no_of_employees,
-                region_of_employment,
-                prevailing_wage,
-                unit_of_wage,
-                full_time_position,
-                company_age
-                ):
-        """
-        Usvisa Data constructor
-        Input: all features of the trained model for prediction
-        """
+    def __init__(self,continent,education_of_employee,has_job_experience,requires_job_training,no_of_employees,region_of_employment,prevailing_wage,unit_of_wage,full_time_position,company_age):
         try:
             self.continent = continent
             self.education_of_employee = education_of_employee
@@ -42,9 +26,6 @@ class USvisaData:
             raise USvisaException(e, sys) from e
 
     def get_usvisa_input_data_frame(self)-> DataFrame:
-        """
-        This function returns a DataFrame from USvisaData class input
-        """
         try:
             
             usvisa_input_dict = self.get_usvisa_data_as_dict()
@@ -55,11 +36,9 @@ class USvisaData:
 
 
     def get_usvisa_data_as_dict(self):
-        """
-        This function returns a dictionary from USvisaData class input 
-        """
-        logging.info("Entered get_usvisa_data_as_dict method as USvisaData class")
+        logging.info("<-----Prediciton pipeline started----->")
 
+        logging.info("Entered get_usvisa_data_as_dict method as USvisaData class")
         try:
             input_data = {
                 "continent": [self.continent],
@@ -85,9 +64,6 @@ class USvisaData:
 
 class USvisaClassifier:
     def __init__(self,prediction_pipeline_config: USvisaPredictorConfig = USvisaPredictorConfig(),) -> None:
-        """
-        :param prediction_pipeline_config: Configuration for prediction the value
-        """
         try:
             # self.schema_config = read_yaml_file(SCHEMA_FILE_PATH)
             self.prediction_pipeline_config = prediction_pipeline_config
@@ -96,10 +72,6 @@ class USvisaClassifier:
 
 
     def predict(self, dataframe) -> str:
-        """
-        This is the method of USvisaClassifier
-        Returns: Prediction in string format
-        """
         try:
             logging.info("Entered predict method of USvisaClassifier class")
             model = USvisaEstimator(

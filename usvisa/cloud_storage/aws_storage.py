@@ -30,19 +30,25 @@ class SimpleStorageService:
             raise USvisaException(e,sys)
         
         
-
     @staticmethod
     def read_object(object_name: str, decode: bool = True, make_readable: bool = False) -> Union[StringIO, str]:
         try:
+            if isinstance(object_name, list):
+                if len(object_name) == 0:
+                    raise ValueError("No object found/No model in S3 to read.....")
+                return
+                
             func = (
                 lambda: object_name.get()["Body"].read().decode()
                 if decode is True
                 else object_name.get()["Body"].read())
+            
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
             logging.info("Exited the read_object method of S3Operations class")
             return conv_func()
 
         except Exception as e:
+            logging.error(f"Error in read_object: {e}")
             raise USvisaException(e, sys) from e
 
     def get_bucket(self, bucket_name: str) -> Bucket:

@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from usvisa.pipeline.prediction_pipeline import USvisaData, USvisaClassifier
-from usvisa.pipeline.training_pipeline import TrainPipeline
 
 app = Flask(__name__)
 CORS(app) 
@@ -49,15 +48,6 @@ def index():
             return jsonify({"status": False, "error": str(e)}), 400
 
     return render_template("usvisa.html", context="Rendering")
-
-@app.route("/modelretrainingpipeline", methods=["GET"])
-def train_route():
-    try:
-        train_pipeline = TrainPipeline()
-        train_pipeline.run_pipeline()
-        return "Training successful !!"
-    except Exception as e:
-        return f"Error Occurred! {e}"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
