@@ -57,3 +57,14 @@ export MLFLOW_TRACKING_USERNAME="your_mlflow_tracking_username_here"
 export MLFLOW_TRACKING_PASSWORD="your_mlflow_tracking_password_here"
 ```
 
+### 6. Run the Project
+
+Run the Model Trainer script
+```bash
+python main.py
+```
+
+Run the Flask Web App script
+```bash
+python app.py
+```
