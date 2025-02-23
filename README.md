@@ -4,6 +4,8 @@
 ## Project Setup Guide
 
 
+
+
 ### 1. Create and Activate the Virtual Environment
 
 Create environment with Python 3.8
@@ -15,6 +17,9 @@ Activate the environment
 ```bash
 conda activate visa
 ```
+
+
+
 
 
 ### 2. Install Dependencies
