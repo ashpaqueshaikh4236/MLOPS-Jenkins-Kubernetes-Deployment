@@ -1,5 +1,5 @@
-#!/bin/bash
+# !/bin/bash
 airflow scheduler &
 
-# Step 4: Start the Airflow webserver
+# Start the Airflow webserver
 airflow webserver
