@@ -62,7 +62,7 @@ Run the Model Trainer script
 python main.py
 ```
 
-Run the Flask Web App script
+Run the Flask Web App 
 ```bash
 python app.py
 ```
