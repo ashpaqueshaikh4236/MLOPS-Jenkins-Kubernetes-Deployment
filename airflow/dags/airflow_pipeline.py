@@ -3,6 +3,7 @@ from airflow.operators.python import PythonOperator
 import logging
 from usvisa.pipeline.training_pipeline import TrainPipeline
 from datetime import datetime
+today = datetime.today()
 
 training_pipeline = TrainPipeline()
 
@@ -120,21 +121,6 @@ def model_pusher(**kwargs):
     except Exception as e:
         logging.error(f"Error during model pusher: {str(e)}")
         raise e
-    
-
-# with DAG(
-#     "training_pipeline",
-#     default_args={"retries": 0},
-#     description="Training pipeline for model validation and deployment",
-#     schedule_interval="@once",
-#     start_date=datetime(today.year, today.month, today.day, 9, 10), 
-
-#     schedule_interval="@daily", 
-#     start_date=datetime(today.year, today.month, today.day, 23, 55), 
-
-#     catchup=False,
-#     tags=["machine_learning", "model_training", "usvisa"],
-# ) as dag:
 
 
 # Airflow DAG setup
@@ -142,8 +128,8 @@ with DAG(
     "training_pipeline",
     default_args={"retries": 0},
     description="Training pipeline for model validation and deployment",
-    schedule_interval=None,  
-    start_date=datetime(2025, 2, 23), 
+    schedule_interval="@daily",  
+    start_date=datetime(today.year, today.month, today.day),
     catchup=False,
     tags=["machine_learning", "model_training", "usvisa"],
 ) as dag:
