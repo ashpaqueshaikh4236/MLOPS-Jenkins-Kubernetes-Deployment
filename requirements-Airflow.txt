@@ -15,6 +15,4 @@ botocore
 uvicorn
 dvc
 mlflow
-flask-cors
-Flask
 -e .

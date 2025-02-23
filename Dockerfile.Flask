@@ -1,0 +1,23 @@
+FROM python:3.8-slim-buster
+
+
+WORKDIR /app
+
+
+COPY usvisa/ /app/usvisa/
+COPY static/ /app/static/
+COPY templates/ /app/templates/
+
+
+COPY app.py /app/app.py
+COPY setup.py /app/setup.py
+COPY requirements-Flask.txt /app/requirements-Flask.txt
+
+
+RUN pip install -r requirements-Flask.txt
+
+
+EXPOSE 5000
+
+
+CMD ["python","app.py"]

@@ -1,0 +1,10 @@
+pandas
+numpy
+dill
+scikit-learn
+boto3
+mypy-boto3-s3
+botocore
+flask-cors
+Flask
+ -e .

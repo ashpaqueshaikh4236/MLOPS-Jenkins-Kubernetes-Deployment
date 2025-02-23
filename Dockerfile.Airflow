@@ -1,0 +1,36 @@
+FROM python:3.8-slim-buster
+USER root
+RUN mkdir /app
+
+
+COPY airflow/dags/ /app/airflow/dags/
+COPY config/ /app/config/
+COPY usvisa/ /app/usvisa/
+
+
+COPY setup.py /app/setup.py
+COPY requirements-Airflow.txt /app/requirements-Airflow.txt
+COPY start.sh /app/start.sh
+
+RUN touch /app/.project-root
+
+WORKDIR /app/
+RUN pip3 install -r requirements-Airflow.txt
+RUN dvc init --no-scm
+
+
+ENV AIRFLOW_HOME="/app/airflow"
+ENV AIRFLOW__CORE__DAGS_FOLDER="/app/airflow/dags"
+ENV AIRFLOW__CORE__ALLOWED_DESERIALIZATION_CLASSES="usvisa.*"
+ENV AIRFLOW_CORE_DAGBAG_IMPORT_TIMEOUT=1000
+ENV AIRFLOW_CORE_ENABLE_XOM_PICKING=True
+
+RUN airflow db init
+RUN airflow db migrate
+RUN airflow users create -e admin@gmail.com -f admin -l admin -p admin -r Admin -u admin
+RUN chmod 777 start.sh
+
+EXPOSE 8080
+
+ENTRYPOINT [ "/bin/sh" ]
+CMD [ "start.sh" ]

@@ -44,7 +44,7 @@ list_of_files = [
     f"{project_name}/utils/__init__.py",
     f"{project_name}/utils/main_utils.py",
 
-
+    "airflow/dags/airflow_pipeline.py",
     "config/model.yaml",
     "config/schema.yaml",
     "static/css/style.css",
