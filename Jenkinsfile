@@ -1,9 +1,8 @@
 pipeline {
     agent any
-    // environment {
-    //     // Set a default value for INITIAL_RUN, which will be updated later in the script block
-    //     INITIAL_RUN = 'false'
-    // }
+    environment {
+        INITIAL_RUN = 'false'  
+    }
 
     stages {
         // Uncomment this section if you need the repository to be cloned
@@ -17,20 +16,29 @@ pipeline {
         }
         */
 
-        stage('Initial Run Check') {
+        stage('Check and Create initial_run.txt') {
             steps {
                 script {
-                    // Check if 'initial_run.txt' exists and read its content
-                    if (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'true') {
-                        env.INITIAL_RUN = 'true'
+                    // Check if 'initial_run.txt' file exists
+                    if (fileExists('initial_run.txt')) {
+                        // Read content of the file
+                        def content = readFile('initial_run.txt').trim()
+                        // If the file content is 'true', set INITIAL_RUN to 'true'
+                        if (content == 'true') {
+                            env.INITIAL_RUN = 'true'
+                        }
                     } else {
-                        env.INITIAL_RUN = 'false'
+                        // If the file does not exist, create it and write 'true'
+                        echo "initial_run.txt file does not exist, creating it with 'true'."
+                        writeFile(file: 'initial_run.txt', text: 'true')
+                        env.INITIAL_RUN = 'true'
                     }
-                    echo "INITIAL_RUN: ${env.INITIAL_RUN}"  // This will print 'true' or 'false' depending on file content
+                    echo "INITIAL_RUN value: ${env.INITIAL_RUN}"
                 }
             }
         }
-
+        
+        
         stage('Trivy File Scan') {
             steps {
                 echo 'Running Trivy Scan...'
@@ -233,10 +241,10 @@ pipeline {
     post {
         always {
             script {
-                // After first run, set INITIAL_RUN to false for future runs
+                // After first run, update 'initial_run.txt' to 'false'
                 if (env.INITIAL_RUN == 'true') {
                     echo "First run completed, setting INITIAL_RUN to 'false'."
-                    writeFile(file: 'initial_run.txt', text: 'false')  // Update the file to 'false' after the first run
+                    writeFile(file: 'initial_run.txt', text: 'false')  // Update the file to 'false'
                 }
             }
         }
