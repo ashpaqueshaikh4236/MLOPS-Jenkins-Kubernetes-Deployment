@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    environment {
-        INITIAL_RUN = 'false'  
-    }
+    // environment {
+    //     INITIAL_RUN = 'false'  
+    // }
 
     stages {
         // Uncomment this section if you need the repository to be cloned
