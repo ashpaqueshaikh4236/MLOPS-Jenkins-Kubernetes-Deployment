@@ -218,7 +218,11 @@ pipeline {
     post {
         always {
             script {
-                env.INITIAL_RUN = 'false'
+                // After the first run, set INITIAL_RUN to false for future runs
+                if (env.INITIAL_RUN == 'true') {
+                    echo "First run completed, setting INITIAL_RUN to 'false'."
+                    env.INITIAL_RUN = 'false'
+                }
             }
         }
     }
