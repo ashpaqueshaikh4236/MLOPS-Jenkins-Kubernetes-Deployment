@@ -4,7 +4,7 @@ import logging
 from usvisa.pipeline.training_pipeline import TrainPipeline
 from datetime import datetime
 today = datetime.today()
-
+#
 training_pipeline = TrainPipeline()
 
 # Task 1: Data Ingestion
