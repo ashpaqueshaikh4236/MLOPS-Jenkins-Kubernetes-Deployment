@@ -25,7 +25,6 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow') } }
-            
             steps {
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
@@ -53,36 +52,39 @@ pipeline {
                 }
             }
         }
+
+         stage('4. Run Docker container using Airflow Docker Image') {
+                when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow') } }
+                steps {
+                    echo 'Running Docker container using Airflow image...'
+                    withCredentials([string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                                    string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY'),
+                                    string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
+                                    string(credentialsId: 'mlflow_tracking_uri', variable: 'MLFLOW_TRACKING_URI'),
+                                    string(credentialsId: 'mlflow_tracking_username', variable: 'MLFLOW_TRACKING_USERNAME'),
+                                    string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')]) {
+    
+                        sh """
+                        docker run -d -p 8080:8080 --name airflow-container \
+                            -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+                            -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+                            -e MONGODB_URL="$MONGODB_URL" \
+                            -e MLFLOW_TRACKING_URI="$MLFLOW_TRACKING_URI" \
+                            -e MLFLOW_TRACKING_USERNAME="$MLFLOW_TRACKING_USERNAME" \
+                            -e MLFLOW_TRACKING_PASSWORD="$MLFLOW_TRACKING_PASSWORD" \
+                            airflow-image
+                        docker ps 
+                        """
+                        echo 'Docker container for Airflow is running.'
+                    }
+                }
+            }
     }
 }
 
 
 
-        // stage('4. Run Docker container using Airflow Docker Image') {
-        //     steps {
-        //         echo 'Running Docker container using Airflow image...'
-        //         withCredentials([string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
-        //                         string(credentialsId: 'secret-key', variable: 'AWS_SECRET_ACCESS_KEY'),
-        //                         string(credentialsId: 'mongodb_url', variable: 'MONGODB_URL'),
-        //                         string(credentialsId: 'mlflow_tracking_uri', variable: 'MLFLOW_TRACKING_URI'),
-        //                         string(credentialsId: 'mlflow_tracking_username', variable: 'MLFLOW_TRACKING_USERNAME'),
-        //                         string(credentialsId: 'mlflow_tracking_password', variable: 'MLFLOW_TRACKING_PASSWORD')]) {
-
-        //             sh """
-        //             docker run -d -p 8080:8080 --name airflow-container \
-        //                 -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
-        //                 -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
-        //                 -e MONGODB_URL="$MONGODB_URL" \
-        //                 -e MLFLOW_TRACKING_URI="$MLFLOW_TRACKING_URI" \
-        //                 -e MLFLOW_TRACKING_USERNAME="$MLFLOW_TRACKING_USERNAME" \
-        //                 -e MLFLOW_TRACKING_PASSWORD="$MLFLOW_TRACKING_PASSWORD" \
-        //                 airflow-image
-        //             docker ps 
-        //             """
-        //             echo 'Docker container for Airflow is running.'
-        //         }
-        //     }
-        // }
+   
 
         // stage('5. Build Flask Docker Image') {
         //     steps {
