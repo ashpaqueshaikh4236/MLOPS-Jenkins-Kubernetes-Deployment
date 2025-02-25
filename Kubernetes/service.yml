@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlops-service
+  name: flask-image-service
   labels:
-    app: mlops
+    app: flask-web-app
 spec:
   type: LoadBalancer
   ports:
   - port: 5000
     targetPort: 5000
   selector:
-    app: mlops
+    app: flask-web-app
