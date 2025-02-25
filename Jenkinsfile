@@ -29,7 +29,7 @@ pipeline {
                     changeset(pattern: '**/airflow/**') // Detect changes in the 'airflow' directory
                     changeset(pattern: 'requirements-Airflow.txt') // Detect changes in the 'requirements-Airflow.txt'
                 }
-
+            }
             steps {
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
