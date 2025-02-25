@@ -1,9 +1,9 @@
 pipeline {
     agent any
-    environment {
-        // Set a default value for INITIAL_RUN, which will be updated later in the script block
-        INITIAL_RUN = 'false'
-    }
+    // environment {
+    //     // Set a default value for INITIAL_RUN, which will be updated later in the script block
+    //     INITIAL_RUN = 'false'
+    // }
 
     stages {
         // Uncomment this section if you need the repository to be cloned
