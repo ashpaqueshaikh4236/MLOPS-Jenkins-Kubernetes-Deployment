@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        INITIAL_RUN = 'true'  
+        INITIAL_RUN = 'false'  
     }
 
     stages {
