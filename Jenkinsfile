@@ -1,7 +1,8 @@
 pipeline {
     agent any
     environment {
-        INITIAL_RUN = "${env.INITIAL_RUN ?: 'true'}" 
+        // Read the value from 'initial_run.txt' and set INITIAL_RUN accordingly
+        INITIAL_RUN = (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'true') ? 'true' : 'false'
     }
 
     stages {
@@ -15,6 +16,14 @@ pipeline {
             }
         }
         */
+
+        stage('Initial Run Check') {
+            steps {
+                script {
+                    echo "INITIAL_RUN: ${env.INITIAL_RUN}"  // This will print 'true' or 'false' depending on file content
+                }
+            }
+        }
 
         stage('Trivy File Scan') {
             steps {
@@ -218,10 +227,10 @@ pipeline {
     post {
         always {
             script {
-                // After the first run, set INITIAL_RUN to false for future runs
+                // After first run, set INITIAL_RUN to false for future runs
                 if (env.INITIAL_RUN == 'true') {
                     echo "First run completed, setting INITIAL_RUN to 'false'."
-                    env.INITIAL_RUN = 'false'
+                    writeFile(file: 'initial_run.txt', text: 'false')  // Update the file to 'false' after the first run
                 }
             }
         }
