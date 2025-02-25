@@ -23,7 +23,7 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when {
-                changeset include: "**/airflow/**", include: "**/config/**", include: "**/usvisa/**", include: "setup.py", include: "requirements-Airflow.txt", include: "Dockerfile.Airflow"
+                changeset "**/airflow/**", "**/config/**", "**/usvisa/**", "setup.py", "requirements-Airflow.txt", "Dockerfile.Airflow"
             }
             steps {
                 script {
