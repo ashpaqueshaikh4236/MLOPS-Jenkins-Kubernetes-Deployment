@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlops-deployment
+  name: flask-image-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: mlops
+      app: flask-web-app
   template:
     metadata:
       labels:
-        app: mlops
+        app: flask-web-app
     spec:
       containers:
-      - name: mlops-container
-        image: ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/mlops-project-repo:latest
+      - name: flask-container
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/flask-docker-repo:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -29,23 +29,3 @@ spec:
               secretKeyRef:
                 name: my-secret
                 key: AWS_SECRET_ACCESS_KEY
-          - name: MONGODB_URL
-            valueFrom:
-              secretKeyRef:
-                name: my-secret
-                key: MONGODB_URL
-          - name: MLFLOW_TRACKING_URI
-            valueFrom:
-              secretKeyRef:
-                name: my-secret
-                key: MLFLOW_TRACKING_URI
-          - name: MLFLOW_TRACKING_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: my-secret
-                key: MLFLOW_TRACKING_USERNAME
-          - name: MLFLOW_TRACKING_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: my-secret
-                key: MLFLOW_TRACKING_PASSWORD
