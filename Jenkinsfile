@@ -24,8 +24,17 @@ pipeline {
         }
 
         stage('3. Build Airflow Docker Image') {
-            when { anyOf { changeset(pattern: '**/airflow/**'), changeset(pattern: '**/config/**'), changeset(pattern: '**/usvisa/**'), changeset(pattern: 'setup.py'), changeset(pattern: 'requirements-Airflow.txt'), changeset(pattern: 'Dockerfile.Airflow') } }
-            steps {
+             when {
+                anyOf {
+                    changeset(pattern: '**/airflow/**')
+                    changeset(pattern: '**/config/**')
+                    changeset(pattern: '**/usvisa/**')
+                    changeset(pattern: 'setup.py')
+                    changeset(pattern: 'requirements-Airflow.txt')
+                    changeset(pattern: 'Dockerfile.Airflow')
+                }
+            }
+            
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
                     def imageExists = sh(
