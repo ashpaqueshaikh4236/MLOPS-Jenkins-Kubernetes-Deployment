@@ -79,6 +79,21 @@ pipeline {
                     }
                 }
             }
+
+
+        stage('5. Build Flask Docker Image') {
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            steps {
+                echo 'Building Flask Docker Image...'
+                sh """
+                docker build -f Dockerfile.Flask -t flask-image .
+                """
+                echo 'Flask Docker image built successfully.'
+            }
+        }
+
+
+        
     }
 }
 
@@ -86,15 +101,7 @@ pipeline {
 
    
 
-        // stage('5. Build Flask Docker Image') {
-        //     steps {
-        //         echo 'Building Flask Docker Image...'
-        //         sh """
-        //         docker build -f Dockerfile.Flask -t flask-image .
-        //         """
-        //         echo 'Flask Docker image built successfully.'
-        //     }
-        // }
+
 
         // stage('6. Create ECR repo for Flask Docker Images') {
         //     steps {
