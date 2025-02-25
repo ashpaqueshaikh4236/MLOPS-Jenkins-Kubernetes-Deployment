@@ -26,8 +26,12 @@ pipeline {
         stage('3. Build Airflow Docker Image') {
             when {
                 anyOf {
-                    changeset(pattern: '**/airflow/**') // Detect changes in the 'airflow' directory
-                    changeset(pattern: 'requirements-Airflow.txt') // Detect changes in the 'requirements-Airflow.txt'
+                    changeset(pattern: '**/airflow/**')
+                    changeset(pattern: '**/config/**')
+                    changeset(pattern: '**/usvisa/**')
+                    changeset(pattern: 'setup.py')
+                    changeset(pattern: 'requirements-Airflow.txt')
+                    changeset(pattern: 'Dockerfile.Airflow')
                 }
             }
             steps {
@@ -59,6 +63,7 @@ pipeline {
         }
     }
 }
+
 
 
         // stage('4. Run Docker container using Airflow Docker Image') {
