@@ -23,7 +23,7 @@ pipeline {
                     // Check if 'initial_run.txt' exists and read its content
                     if (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'true') {
                         env.INITIAL_RUN = 'true'
-                    } else (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'false') {
+                    } else {
                         env.INITIAL_RUN = 'false'
                     }
                     echo "INITIAL_RUN: ${env.INITIAL_RUN}"  // This will print 'true' or 'false' depending on file content
