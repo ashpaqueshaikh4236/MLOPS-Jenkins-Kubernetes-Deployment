@@ -2,14 +2,16 @@ pipeline {
     agent any
 
     stages {
-        // stage('1. Clone') {
-        //     steps {
-        //         echo 'Cloning the repository...'
-        //         git branch: 'main', 
-        //         url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-        //         echo 'Repository cloned successfully.'
-        //     }
-        // }
+        // Uncomment this section if you need the repository to be cloned
+        /*
+        stage('1. Clone') {
+            steps {
+                echo 'Cloning the repository...'
+                git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
+                echo 'Repository cloned successfully.'
+            }
+        }
+        */
 
         stage('2. Trivy Scan') {
             steps {
@@ -21,12 +23,10 @@ pipeline {
             }
         }
 
-       stage('3. Build Airflow Docker Image') {
+        stage('3. Build Airflow Docker Image') {
             when {
                 changeset pattern: '**/airflow/**, **/config/**, **/usvisa/**, setup.py, requirements-Airflow.txt, Dockerfile.Airflow'
             }
-
-          
             steps {
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
@@ -34,14 +34,13 @@ pipeline {
                         script: "docker images -q airflow-image",
                         returnStdout: true
                     ).trim()
-        
+
                     if (imageExists) {
                         echo "Docker image 'airflow-image' already exists. Deleting and rebuilding..."
                         sh """
                         docker stop airflow-container || true
                         docker rm -fv airflow-container || true
-                        docker rmi airflow-image:latest
-                        docker images
+                        docker rmi airflow-image:latest || true
                         docker build -f Dockerfile.Airflow -t airflow-image .
                         docker images
                         """
@@ -55,7 +54,8 @@ pipeline {
                 }
             }
         }
-
+    }
+}
 
 
         // stage('4. Run Docker container using Airflow Docker Image') {
@@ -204,7 +204,3 @@ pipeline {
         //         echo 'Flask image service exposed successfully in Kubernetes.'
         //     }
         // }
-
-
-    }
-}
