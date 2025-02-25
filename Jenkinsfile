@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    // environment {
-    //     INITIAL_RUN = 'false'  
-    // }
-
     stages {
         // Uncomment this section if you need the repository to be cloned
         /*
@@ -19,16 +15,12 @@ pipeline {
         stage('Check and Create initial_run.txt') {
             steps {
                 script {
-                    // Check if 'initial_run.txt' file exists
                     if (fileExists('initial_run.txt')) {
-                        // Read content of the file
                         def content = readFile('initial_run.txt').trim()
-                        // If the file content is 'true', set INITIAL_RUN to 'true'
                         if (content == 'false') {
                             env.INITIAL_RUN = 'false'
                         }
                     } else {
-                        // If the file does not exist, create it and write 'true'
                         echo "initial_run.txt file does not exist, creating it with 'true'."
                         writeFile(file: 'initial_run.txt', text: 'true')
                         env.INITIAL_RUN = 'true'
@@ -241,10 +233,8 @@ pipeline {
     post {
         always {
             script {
-                // After first run, update 'initial_run.txt' to 'false'
                 if (env.INITIAL_RUN == 'true') {
-                    echo "First run completed, setting INITIAL_RUN to 'false'."
-                    writeFile(file: 'initial_run.txt', text: 'false')  // Update the file to 'false'
+                    writeFile(file: 'initial_run.txt', text: 'false')
                 }
             }
         }
