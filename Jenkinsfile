@@ -25,7 +25,7 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when {
-                changeset(file1: 'requirements-Airflow.txt', file2: 'setup.py')
+                changeset(pattern: '**/requirements-Airflow.txt, **/setup.py')
             }
             steps {
                 script {
