@@ -163,6 +163,6 @@ with DAG(
         task_id="model_pusher",
         python_callable=model_pusher,
     )
-    #
+    
     # Task Dependencies
     data_ingestion_task >> data_validation_and_data_drift_checking_task >> model_drift_checking_data_transformation_and_model_training_task >> model_validation_task >> model_pusher_task
