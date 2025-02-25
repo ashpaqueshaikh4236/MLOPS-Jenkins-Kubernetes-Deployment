@@ -66,7 +66,7 @@ export MLFLOW_TRACKING_USERNAME="your_mlflow_tracking_username_here"
 export MLFLOW_TRACKING_PASSWORD="your_mlflow_tracking_password_here"
 ```
 
-### 7. Run the Project
+## 7. Run the Project
 
 Run the Model Trainer script
 ```bash
