@@ -25,7 +25,7 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when {
-                changeset('**/airflow/**', 'requirements-Airflow.txt')
+                changeset(pattern: '**/airflow/**', pattern: 'requirements-Airflow.txt') // for multiple patterns
             }
 
             steps {
