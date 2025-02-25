@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        INITIAL_RUN = 'true'  
+    }
 
     stages {
         // Uncomment this section if you need the repository to be cloned
@@ -24,7 +27,7 @@ pipeline {
         }
 
         stage('Build Airflow Docker Image') {
-            when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow') } }
+            when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
@@ -54,7 +57,7 @@ pipeline {
         }
 
          stage('Run Docker container using Airflow Docker Image') {
-                when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow') } }
+                when { anyOf { changeset(pattern: '**/airflow/**'); changeset(pattern: '**/config/**'); changeset(pattern: '**/usvisa/**'); changeset(pattern: 'setup.py'); changeset(pattern: 'requirements-Airflow.txt'); changeset(pattern: 'Dockerfile.Airflow');expression { return env.INITIAL_RUN == 'true' } } }
                 steps {
                     echo 'Running Docker container using Airflow image...'
                     withCredentials([string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY_ID'),
@@ -82,7 +85,7 @@ pipeline {
 
 
         stage('Build Flask Docker Image') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Building Flask Docker Image...'
                 sh """
@@ -93,7 +96,7 @@ pipeline {
         }
 
         stage('Create ECR repo for Flask Docker Images') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Creating ECR repository for Flask Docker images...'
                 withCredentials([string(credentialsId: 'access-key', variable: 'AWS_ACCESS_KEY'), 
@@ -110,7 +113,7 @@ pipeline {
         }
 
         stage('Login to flask-docker-repo ECR & tag image') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Logging into ECR and tagging Flask Docker image...'
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
@@ -125,7 +128,7 @@ pipeline {
         }
 
         stage('Push image to ECR') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Pushing Flask Docker image to ECR...'
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
@@ -139,7 +142,7 @@ pipeline {
         }
 
         stage('Push image to flask-docker-repo ECR') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Pushing Flask Docker image to flask-docker-repo ECR...'
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
@@ -153,7 +156,7 @@ pipeline {
         }
 
         stage('Cleanup Flask Docker Image') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Cleaning Flask up Docker images...'
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
@@ -169,7 +172,7 @@ pipeline {
         }
 
         stage('Flask web app deploy to Kubernetes') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Starting Flask web app deployment to Kubernetes...'
                 withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID'),
@@ -192,7 +195,7 @@ pipeline {
         }
 
         stage('Restart Flask image Deployment to Apply Changes') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Starting restart of Flask image deployment to apply changes...'
                 script {
@@ -203,11 +206,19 @@ pipeline {
         }
 
         stage('Expose Flask image Service in Kubernetes') {
-            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask') } }
+            when { anyOf { changeset(pattern: '**/Kubernetes/**'); changeset(pattern: '**/static/**'); changeset(pattern: '**/templates/**'); changeset(pattern: 'app.py'); changeset(pattern: 'requirements-Flask.txt'); changeset(pattern: 'Dockerfile.Flask'); expression { return env.INITIAL_RUN == 'true' } } }
             steps {
                 echo 'Starting to expose Flask image service in Kubernetes...'
                 sh "kubectl apply -f Kubernetes/service.yml"
                 echo 'Flask image service exposed successfully in Kubernetes.'
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                env.INITIAL_RUN = 'false'
             }
         }
     }
