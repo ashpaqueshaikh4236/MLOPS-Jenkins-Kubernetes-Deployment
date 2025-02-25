@@ -24,8 +24,8 @@ pipeline {
                         // Read content of the file
                         def content = readFile('initial_run.txt').trim()
                         // If the file content is 'true', set INITIAL_RUN to 'true'
-                        if (content == 'true') {
-                            env.INITIAL_RUN = 'true'
+                        if (content == 'false') {
+                            env.INITIAL_RUN = 'false'
                         }
                     } else {
                         // If the file does not exist, create it and write 'true'
