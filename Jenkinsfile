@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        // Read the value from 'initial_run.txt' and set INITIAL_RUN accordingly
-        INITIAL_RUN = (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'true') ? 'true' : 'false'
+        // Set a default value for INITIAL_RUN, which will be updated later in the script block
+        INITIAL_RUN = 'false'
     }
 
     stages {
@@ -20,6 +20,12 @@ pipeline {
         stage('Initial Run Check') {
             steps {
                 script {
+                    // Check if 'initial_run.txt' exists and read its content
+                    if (fileExists('initial_run.txt') && readFile('initial_run.txt').trim() == 'true') {
+                        env.INITIAL_RUN = 'true'  // Set INITIAL_RUN to 'true' if file has 'true'
+                    } else {
+                        env.INITIAL_RUN = 'false' // Set INITIAL_RUN to 'false' if file has 'false' or doesn't exist
+                    }
                     echo "INITIAL_RUN: ${env.INITIAL_RUN}"  // This will print 'true' or 'false' depending on file content
                 }
             }
