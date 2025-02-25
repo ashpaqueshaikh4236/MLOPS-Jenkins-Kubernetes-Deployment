@@ -23,8 +23,9 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when {
-            changeset  include: 'Dockerfile.Airflow'
+            changeset include: ['airflow/**', 'Dockerfile.Airflow']
         }
+
 
 
 
