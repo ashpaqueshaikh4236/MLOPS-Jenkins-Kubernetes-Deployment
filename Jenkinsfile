@@ -11,6 +11,17 @@ pipeline {
             }
         }
         */
+        
+        stage('Trivy File Scan') {
+            steps {
+                echo 'Running Trivy Scan...'
+                sh """
+                trivy fs . > trivy.txt
+                """
+                echo 'Trivy Scan completed. Results stored in trivy.txt.'
+            }
+        }
+
 
         stage('Check and Create initial_run.txt') {
             steps {
@@ -27,17 +38,6 @@ pipeline {
                     }
                     echo "INITIAL_RUN value: ${env.INITIAL_RUN}"
                 }
-            }
-        }
-        
-        
-        stage('Trivy File Scan') {
-            steps {
-                echo 'Running Trivy Scan...'
-                sh """
-                trivy fs . > trivy.txt
-                """
-                echo 'Trivy Scan completed. Results stored in trivy.txt.'
             }
         }
 
