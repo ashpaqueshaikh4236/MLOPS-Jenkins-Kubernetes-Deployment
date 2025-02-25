@@ -23,7 +23,7 @@ pipeline {
 
         stage('3. Build Airflow Docker Image') {
             when {
-                changeset "**/airflow/**", "**/config/**", "**/usvisa/**", "setup.py", "requirements-Airflow.txt", "Dockerfile.Airflow"
+                changeset include: "**/airflow/**", include: "**/config/**", include: "**/usvisa/**", include: "setup.py", include: "requirements-Airflow.txt", include: "Dockerfile.Airflow"
             }
             steps {
                 script {
@@ -32,7 +32,7 @@ pipeline {
                         script: "docker images -q airflow-image",
                         returnStdout: true
                     ).trim()
-
+        
                     if (imageExists) {
                         echo "Docker image 'airflow-image' already exists. Deleting and rebuilding..."
                         sh """
@@ -53,6 +53,7 @@ pipeline {
                 }
             }
         }
+
 
         // stage('4. Run Docker container using Airflow Docker Image') {
         //     steps {
