@@ -21,15 +21,11 @@ pipeline {
             }
         }
 
-        stage('3. Build Airflow Docker Image') {
+       stage('3. Build Airflow Docker Image') {
             when {
-            changeset pattern: '**/airflow/**, Dockerfile.Airflow'
-        }
-
-
-
-
-
+                changeset pattern: '**/airflow/**, **/config/**, **/usvisa/**, setup.py, requirements-Airflow.txt, Dockerfile.Airflow'
+            }
+            
             steps {
                 script {
                     echo 'Checking if Docker image "airflow-image" exists...'
@@ -58,6 +54,7 @@ pipeline {
                 }
             }
         }
+
 
 
         // stage('4. Run Docker container using Airflow Docker Image') {
