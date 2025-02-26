@@ -1,17 +1,6 @@
 pipeline {
     agent any
     stages {
-        // Uncomment this section if you need the repository to be cloned
-        /*
-        stage('1. Clone') {
-            steps {
-                echo 'Cloning the repository...'
-                git branch: 'main', url: 'https://github.com/ashpaqueshaikh4236/MLOPS-Jenkins-Kubernetes-Deployment.git'
-                echo 'Repository cloned successfully.'
-            }
-        }
-        */
-        
         stage('Trivy File Scan') {
             steps {
                 echo 'Running Trivy Scan...'
