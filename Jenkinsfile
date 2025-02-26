@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Trivy File Scan') {
             steps {
-                echo 'Running Trivy Scan...'
+                echeo 'Running Trivy Scan...'
                 sh """
                 trivy fs . > trivy.txt
                 """
