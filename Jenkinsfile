@@ -11,7 +11,6 @@ pipeline {
             }
         }
 
-
         stage('Check and Create initial_run.txt') {
             steps {
                 script {
