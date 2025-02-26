@@ -11,7 +11,7 @@ pipeline {
             }
         }
 
-        stage('Check and Create initial_run.txt') {
+        stage('Check initial_run.txt') {
             steps {
                 script {
                     if (fileExists('initial_run.txt')) {
