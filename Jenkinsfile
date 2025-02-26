@@ -221,19 +221,33 @@ pipeline {
     post {
 
         success {
-            withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
-                emailext(
-                    to: "${RECIPIENTP}",
-                    from: "${RECIPIENTP}",
-                    subject: "Build Success: ${BUILD_NUMBER}",
-                    body: """
-                        Dear user,
-                        The Jenkins build has succeeded.
-                    """,
-                    mimeType: 'text/html'
-                )
-            }
+            emailext(
+                to: "newdigital3344@gmail.com",  // Hard-coded recipient email
+                from: "newdigital3344@gmail.com",  // Hard-coded sender email
+                subject: "Build Success: ${BUILD_NUMBER}",
+                body: """
+                    Dear user,
+                    The Jenkins build has succeeded.
+                """,
+                mimeType: 'text/html'
+            )
         }
+
+
+        // success {
+        //     withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+        //         emailext(
+        //             to: "newdigital3344@gmail.com",
+        //             from: "newdigital3344@gmail.com",
+        //             subject: "Build Success: ${BUILD_NUMBER}",
+        //             body: """
+        //                 Dear user,
+        //                 The Jenkins build has succeeded.
+        //             """,
+        //             mimeType: 'text/html'
+        //         )
+        //     }
+        // }
 
         failure {
             withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
