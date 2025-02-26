@@ -219,6 +219,39 @@ pipeline {
     }
 
     post {
+
+        success {
+            withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+                emailext(
+                    to: "${RECIPIENTP}",
+                    from: "${RECIPIENTP}",
+                    subject: "Build Success: ${BUILD_NUMBER}",
+                    body: """
+                        Dear user,
+                        The Jenkins build has succeeded.
+                    """,
+                    mimeType: 'text/html'
+                )
+            }
+        }
+
+        failure {
+            withCredentials([string(credentialsId: 'RECIPIENTF', variable: 'RECIPIENTF'),
+                             string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
+                emailext(
+                    to: "${RECIPIENTF}",
+                    from: "${RECIPIENTP}",
+                    subject: "Build Failed: ${BUILD_NUMBER}",
+                    body: """
+                        Dear user,
+                        The Jenkins build has failed. Please check the console output for more details:
+                        ${env.BUILD_URL}console
+                    """,
+                    mimeType: 'text/html'
+                )
+            }
+        }
+
         always {
             script {
                 if (env.INITIAL_RUN == 'true') {
@@ -227,4 +260,5 @@ pipeline {
             }
         }
     }
+
 }
