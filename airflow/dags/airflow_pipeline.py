@@ -39,12 +39,12 @@ def data_validation_and_data_drift_checking(**kwargs):
 def model_drift_checking_data_transformation_and_model_training(**kwargs):
     ti = kwargs['ti']
     try:
-        #drift_status = ti.xcom_pull(task_ids="data_validation_and_data_drift_checking", key="drift_status")
+        drift_status = ti.xcom_pull(task_ids="data_validation_and_data_drift_checking", key="drift_status")
         data_value = ti.xcom_pull(task_ids="data_ingestion", key="data_value")
         if not data_value:
             logging.info("No data change detected. Skipping all subsequent tasks.")
             return 
-        drift_status=True
+            
         data_ingestion_artifact = ti.xcom_pull(task_ids="data_ingestion", key="data_ingestion_artifact")
         data_validation_artifact = ti.xcom_pull(task_ids="data_validation_and_data_drift_checking", key="data_validation_artifact")
 
