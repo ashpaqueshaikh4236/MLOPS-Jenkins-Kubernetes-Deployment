@@ -89,8 +89,19 @@ python app.py
 # Model Trainer Production Images
 ## 1.Jenkins-Pipeline
 ![Jenkins](Production_Images/Model_Trainer_Images/1.Jenkins-Pipeline.png)
-<br>
-<br>
+
 
 ## 2.Airflow-Pipeline-Data_ingestion-to-Model-Pusher
 ![Airflow](Production_Images/Model_Trainer_Images/2.Airflow-Pipeline-Data_ingestion-to-Model-Pusher.png)
+
+
+## 3.Evidently-ai-data-drift
+![Evidently-AI](Production_Images/Model_Trainer_Images/3.Evidently-ai-data-drift.png)
+
+
+## 4.Experiment-tracking-with-mlflow
+![MLFlOW](Production_Images/Model_Trainer_Images/4.Experiment-tracking-with-mlflow.png)
+
+
+## 5.Amazon-S3-Bucket-for-ML-Models
+![S3](Production_Images/Model_Trainer_Images/5.Amazon-S3-Bucket-for-ML-Models.png)
