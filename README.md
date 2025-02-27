@@ -1,4 +1,7 @@
 # Project Setup Guide
+<br>
+<br>
+<br>
 
 ## 1. Clone repository
 
@@ -85,4 +88,9 @@ python app.py
 
 # Model Trainer Production Images
 ## 1.Jenkins-Pipeline
-![Jenkins Pipeline](Production_Images/Model_Trainer_Images/1.Jenkins-Pipeline.png)
+![Jenkins](Production_Images/Model_Trainer_Images/1.Jenkins-Pipeline.png)
+<br>
+<br>
+
+## 2.Airflow-Pipeline-Data_ingestion-to-Model-Pusher
+![Airflow](Production_Images/Model_Trainer_Images/2.Airflow-Pipeline-Data_ingestion-to-Model-Pusher.png)
