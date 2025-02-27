@@ -129,7 +129,7 @@ python app.py
 
 
 ## 5.Cluster-Nodeworker1-Monitoring
-![Nodeworker1](Production_Images\Jenkins_Kubernetes_Deployment_Images\5.Cluster-Nodeworker1-Monitoring.png)
+![Nodeworker1](Production_Images/Jenkins_Kubernetes_Deployment_Images/5.Cluster-Nodeworker1-Monitoring.png)
 
 ## 6.Cluster-Nodeworker2-Monitoring
 ![Nodeworker2](Production_Images/Jenkins_Kubernetes_Deployment_Images/6.Cluster-Nodeworker2-Monitoring.png)
