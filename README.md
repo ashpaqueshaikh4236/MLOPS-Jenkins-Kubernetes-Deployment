@@ -105,3 +105,31 @@ python app.py
 
 ## 5.Amazon-S3-Bucket-for-ML-Models
 ![S3](Production_Images/Model_Trainer_Images/5.Amazon-S3-Bucket-for-ML-Models.png)
+
+
+<br>
+<br>
+<br>
+
+# Jenkins Kubernetes Deployment Production Images
+## 1.Jenkins-Pipeline
+![Jenkins](Production_Images/Jenkins_Kubernetes_Deployment_Images/1.Jenkins-Pipeline.png)
+
+
+## 2.ECR-Repo-for-Docker-Images
+![ECR](Production_Images/Jenkins_Kubernetes_Deployment_Images/2.ECR-Repo-for-Docker-Images.png)
+
+
+## 3.Flask-Web-App-Running
+![Flask](Production_Images/Jenkins_Kubernetes_Deployment_Images/3.Flask-Web-App-Running.png)
+
+
+## 4.Kubernetes-Cluster-Monitoring
+![Cluster](Production_Images/Jenkins_Kubernetes_Deployment_Images/4.Kubernetes-Cluster-Monitoring.png)
+
+
+## 5.Cluster-Nodeworker1-Monitoring
+![Nodeworker1](Production_Images\Jenkins_Kubernetes_Deployment_Images\5.Cluster-Nodeworker1-Monitoring.png)
+
+## 6.Cluster-Nodeworker2-Monitoring
+![Nodeworker2](Production_Images/Jenkins_Kubernetes_Deployment_Images/6.Cluster-Nodeworker2-Monitoring.png)
