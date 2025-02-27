@@ -83,7 +83,7 @@ python app.py
 <br>
 
 # Model Trainer Production Images
-## 1.Jenkins-Pipeline
+## 1.Jenkins-Pipeline-Git-SCM-Triggered-to-Email-Notification
 ![Jenkins](Production_Images/Model_Trainer_Images/1.Jenkins-Pipeline.png)
 
 
@@ -108,7 +108,7 @@ python app.py
 <br>
 
 # Jenkins Kubernetes Deployment Production Images
-## 1.Jenkins-Pipeline
+## 1.Jenkins-Pipeline-Git-SCM-Triggered-to-Email-Notification
 ![Jenkins](Production_Images/Jenkins_Kubernetes_Deployment_Images/1.Jenkins-Pipeline.png)
 
 
