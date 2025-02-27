@@ -1,8 +1,4 @@
 # Project Setup Guide
-<br>
-<br>
-<br>
-
 ## 1. Clone repository
 
 Open a terminal (or Git Bash if you're on Windows)
