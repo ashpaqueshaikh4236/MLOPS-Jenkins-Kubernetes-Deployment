@@ -223,8 +223,8 @@ pipeline {
         success {
             withCredentials([string(credentialsId: 'RECIPIENTP', variable: 'RECIPIENTP')]) {
                 emailext(
-                    to: "newdigital3344@gmail.com",
-                    from: "newdigital3344@gmail.com",
+                    to: "${RECIPIENTP}",
+                    from: "${RECIPIENTP}",
                     subject: "Build Success: ${BUILD_NUMBER}",
                     body: """
                         Dear user,
